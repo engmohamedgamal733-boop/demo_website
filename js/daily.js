@@ -4,28 +4,62 @@
 const START_DATE = "2026-04-05";  // ← غير التاريخ هنا (سنة-شهر-يوم)
 
 // ╔════════════════════════════════════════════════════════════╗
-// ║  الريكوردات - أضف ريكوردات جديدة هنا                       ║
+// ║  الرسائل اليومية - 30 رسالة                                ║
+// ║  اكتب رسالتك جنب كل يوم                                   ║
+// ╚════════════════════════════════════════════════════════════╝
+const dailyMessages = {
+    1:  "اكتب رسالة اليوم الأول هنا...",
+    2:  "اكتب رسالة اليوم التاني هنا...",
+    3:  "اكتب رسالة اليوم التالت هنا...",
+    4:  "اكتب رسالة اليوم الرابع هنا...",
+    5:  "اكتب رسالة اليوم الخامس هنا...",
+    6:  "اكتب رسالة اليوم السادس هنا...",
+    7:  "اكتب رسالة اليوم السابع هنا...",
+    8:  "اكتب رسالة اليوم التامن هنا...",
+    9:  "اكتب رسالة اليوم التاسع هنا...",
+    10: "اكتب رسالة اليوم العاشر هنا...",
+    11: "اكتب رسالة اليوم 11 هنا...",
+    12: "اكتب رسالة اليوم 12 هنا...",
+    13: "اكتب رسالة اليوم 13 هنا...",
+    14: "اكتب رسالة اليوم 14 هنا...",
+    15: "اكتب رسالة اليوم 15 هنا...",
+    16: "اكتب رسالة اليوم 16 هنا...",
+    17: "اكتب رسالة اليوم 17 هنا...",
+    18: "اكتب رسالة اليوم 18 هنا...",
+    19: "اكتب رسالة اليوم 19 هنا...",
+    20: "اكتب رسالة اليوم 20 هنا...",
+    21: "اكتب رسالة اليوم 21 هنا...",
+    22: "اكتب رسالة اليوم 22 هنا...",
+    23: "اكتب رسالة اليوم 23 هنا...",
+    24: "اكتب رسالة اليوم 24 هنا...",
+    25: "اكتب رسالة اليوم 25 هنا...",
+    26: "اكتب رسالة اليوم 26 هنا...",
+    27: "اكتب رسالة اليوم 27 هنا...",
+    28: "اكتب رسالة اليوم 28 هنا...",
+    29: "اكتب رسالة اليوم 29 هنا...",
+    30: "اكتب رسالة اليوم 30 هنا..."
+};
+
+// ╔════════════════════════════════════════════════════════════╗
+// ║  الإيموجي لكل يوم                                          ║
+// ╚════════════════════════════════════════════════════════════╝
+const dailyMoods = {
+    1: "💕", 2: "🌙", 3: "✨", 4: "🎁", 5: "😊",
+    6: "💖", 7: "🌟", 8: "💝", 9: "🥰", 10: "💗",
+    11: "🌹", 12: "💫", 13: "😍", 14: "❤️", 15: "🦋",
+    16: "🌸", 17: "💜", 18: "🎵", 19: "🌺", 20: "💘",
+    21: "🍀", 22: "⭐", 23: "🌷", 24: "💞", 25: "🎀",
+    26: "🌼", 27: "💓", 28: "🌻", 29: "💗", 30: "👑"
+};
+
+// ╔════════════════════════════════════════════════════════════╗
+// ║  الريكوردات - أضف ريكورد لكل يوم                           ║
 // ╚════════════════════════════════════════════════════════════╝
 const dailyRecords = [
-    {
-        day: 1,
-        message: "أول رسالة ليكي يا قمر... بحبك من كل قلبي 💕",
-        audioFile: "records/record1.mp3",
-        mood: "💕"
-    },
-    {
-        day: 2,
-        message: "اليوم التاني... كل يوم بحبك أكتر 🌙",
-        audioFile: "records/record2.mp3",
-        mood: "🌙"
-    }
+    { day: 1,  audioFile: "records/record1.mp3" },
+    { day: 2,  audioFile: "records/record2.mp3" }
     // أضف المزيد هنا:
-    // {
-    //     day: 3,
-    //     message: "رسالة اليوم التالت...",
-    //     audioFile: "records/record3.mp3",
-    //     mood: "✨"
-    // },
+    // { day: 3,  audioFile: "records/record3.mp3" },
 ];
 
 // ============= Audio Player State =============
@@ -55,7 +89,6 @@ function generateFolders() {
     
     const daysSinceStart = getDaysSinceStart();
     
-    // لو لسه ما وصلناش لتاريخ البداية
     if (daysSinceStart < 0) {
         const waitingMsg = document.createElement('div');
         waitingMsg.className = 'empty-message';
@@ -69,15 +102,9 @@ function generateFolders() {
         return;
     }
     
-    // عدد الأيام المتاحة (من 1)
-    // daysSinceStart = 0 يعني اليوم الأول
-    // daysSinceStart = 1 يعني اليوم التاني
     const availableDays = daysSinceStart + 1;
-    
-    // فلترة الريكوردات اللي المفروض تظهر
     const visibleRecords = dailyRecords.filter(record => record.day <= availableDays);
     
-    // لو مفيش ريكوردات تظهر
     if (visibleRecords.length === 0) {
         const emptyMsg = document.createElement('div');
         emptyMsg.className = 'empty-message';
@@ -90,16 +117,16 @@ function generateFolders() {
         return;
     }
     
-    // إنشاء الفولدرات
     visibleRecords.forEach((record, index) => {
         const isToday = record.day === availableDays;
+        const mood = dailyMoods[record.day] || "💕";
         
         const folder = document.createElement('div');
         folder.className = `folder unlocked ${isToday ? 'today' : ''}`;
         folder.style.animationDelay = `${index * 0.1}s`;
         folder.innerHTML = `
             <span class="folder-icon">📂</span>
-            <div class="folder-mood">${record.mood || '💕'}</div>
+            <div class="folder-mood">${mood}</div>
             <div class="folder-day">اليوم ${record.day}</div>
             <div class="folder-status">
                 ${isToday ? '🎉 جديد!' : '✅ متاح'}
@@ -113,20 +140,6 @@ function generateFolders() {
         container.appendChild(folder);
     });
     
-    // Progress indicator
-    const progressSection = document.createElement('div');
-    progressSection.className = 'progress-section';
-    progressSection.innerHTML = `
-        <div class="progress-info">
-            <span>📊 رسائلك: ${visibleRecords.length} رسالة</span>
-            <div class="mini-progress">
-                <div class="mini-progress-fill" style="width: ${(visibleRecords.length/dailyRecords.length)*100}%"></div>
-            </div>
-        </div>
-    `;
-    container.appendChild(progressSection);
-    
-    // Hint لو فيه ريكوردات تانية
     if (visibleRecords.length < dailyRecords.length) {
         const hint = document.createElement('div');
         hint.className = 'folders-hint';
@@ -135,15 +148,6 @@ function generateFolders() {
             <p>استنيني يا قمر 😉</p>
         `;
         container.appendChild(hint);
-    } else {
-        // كل الريكوردات ظهرت
-        const completeMsg = document.createElement('div');
-        completeMsg.className = 'folders-hint complete';
-        completeMsg.innerHTML = `
-            <p>🎉 ده كل اللي عندي دلوقتي</p>
-            <p>بحبك يا قمري ♥️</p>
-        `;
-        container.appendChild(completeMsg);
     }
 }
 
@@ -160,15 +164,17 @@ function openRecord(record) {
     const modal = document.getElementById('audio-modal');
     if (!modal) return;
     
-    document.getElementById('modal-day').textContent = `${record.mood || '💝'} اليوم ${record.day}`;
+    const mood = dailyMoods[record.day] || "💝";
+    const message = dailyMessages[record.day] || "رسالة اليوم 💕";
+    
+    document.getElementById('modal-day').textContent = `${mood} اليوم ${record.day}`;
     document.getElementById('modal-date').textContent = formatArabicDate(record.day);
-    document.getElementById('modal-message').textContent = record.message;
+    document.getElementById('modal-message').textContent = message;
     
     const audio = document.getElementById('audio-element');
     audio.src = record.audioFile;
     audio.load();
     
-    // Reset player state
     isPlaying = false;
     isDragging = false;
     
@@ -288,7 +294,6 @@ function setupAudioPlayer() {
         showToast('❌ مشكلة في تحميل الصوت', 'error');
     };
     
-    // Slider events
     if (slider) {
         const newSlider = slider.cloneNode(true);
         slider.parentNode.replaceChild(newSlider, slider);
@@ -323,7 +328,6 @@ function setupAudioPlayer() {
         });
     }
     
-    // Progress container click
     if (progressContainer) {
         progressContainer.onclick = (e) => {
             const rect = progressContainer.getBoundingClientRect();
@@ -338,7 +342,6 @@ function setupAudioPlayer() {
         };
     }
     
-    // Volume slider
     const volumeSlider = document.getElementById('volume-slider');
     if (volumeSlider) {
         volumeSlider.oninput = (e) => {
@@ -449,57 +452,3 @@ function showToast(message, type = 'info') {
     if (existing) existing.remove();
     
     const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    
-    requestAnimationFrame(() => toast.classList.add('show'));
-    
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
-    }, 2500);
-}
-
-// ============= Keyboard (Volume only) =============
-document.addEventListener('keydown', (e) => {
-    const modal = document.getElementById('audio-modal');
-    const audio = document.getElementById('audio-element');
-    
-    if (!modal || modal.classList.contains('hidden')) return;
-    
-    if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        if (audio) {
-            audio.volume = Math.min(1, audio.volume + 0.1);
-            const volumeSlider = document.getElementById('volume-slider');
-            if (volumeSlider) volumeSlider.value = audio.volume;
-            updateVolumeIcon(audio.volume);
-        }
-    }
-    
-    if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        if (audio) {
-            audio.volume = Math.max(0, audio.volume - 0.1);
-            const volumeSlider = document.getElementById('volume-slider');
-            if (volumeSlider) volumeSlider.value = audio.volume;
-            updateVolumeIcon(audio.volume);
-        }
-    }
-    
-    if (e.key === 'Escape') {
-        closeModal();
-    }
-});
-
-// ============= Initialize =============
-document.addEventListener('DOMContentLoaded', () => {
-    generateFolders();
-});
-
-// Close modal when clicking outside
-document.addEventListener('click', (e) => {
-    const modal = document.getElementById('audio-modal');
-    if (e.target === modal) closeModal();
-});
