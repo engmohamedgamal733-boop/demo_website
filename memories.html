@@ -22,9 +22,6 @@
             --card-bg: rgba(255, 255, 255, 0.1);
         }
 
-        /* ═══════════════════════════════════════════════════════════ */
-        /*                    Base Styles                              */
-        /* ═══════════════════════════════════════════════════════════ */
         * {
             margin: 0;
             padding: 0;
@@ -304,7 +301,7 @@
         }
 
         /* ═══════════════════════════════════════════════════════════ */
-        /*                    Play/Click Overlay                       */
+        /*                    Click Overlay                            */
         /* ═══════════════════════════════════════════════════════════ */
         .click-overlay {
             position: absolute;
@@ -444,7 +441,7 @@
         }
 
         /* ═══════════════════════════════════════════════════════════ */
-        /*                    LIGHTBOX STYLES                          */
+        /*                    LIGHTBOX                                 */
         /* ═══════════════════════════════════════════════════════════ */
         .lightbox {
             position: fixed;
@@ -477,7 +474,6 @@
             align-items: center;
         }
 
-        /* Close Button */
         .lightbox-close {
             position: absolute;
             top: -50px;
@@ -502,7 +498,6 @@
             transform: rotate(90deg) scale(1.1);
         }
 
-        /* External Link Button */
         .lightbox-external {
             position: absolute;
             top: -50px;
@@ -526,7 +521,6 @@
             background: rgba(255, 255, 255, 0.3);
         }
 
-        /* Media Content */
         .lightbox-media {
             max-width: 100%;
             max-height: 70vh;
@@ -557,12 +551,13 @@
             border-radius: 15px;
         }
 
-        /* Audio Player */
+        /* Audio Container in Lightbox */
         .lightbox-audio-container {
             background: linear-gradient(135deg, rgba(103,58,183,0.5), rgba(63,81,181,0.5));
             padding: 60px 80px;
             border-radius: 20px;
             text-align: center;
+            min-width: 350px;
         }
 
         .lightbox-audio-icon {
@@ -576,13 +571,11 @@
             50% { transform: scale(1.1); }
         }
 
-        .lightbox-audio-container audio {
-            width: 100%;
-            min-width: 300px;
-            max-width: 500px;
+        .lightbox-audio-container iframe {
+            border-radius: 10px;
+            max-width: 100%;
         }
 
-        /* Info Section */
         .lightbox-info {
             text-align: center;
             margin-top: 25px;
@@ -608,33 +601,6 @@
             border-radius: 15px;
             font-size: 0.85rem;
             margin-bottom: 10px;
-        }
-
-        /* Loading State */
-        .lightbox-loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 60px;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255, 255, 255, 0.2);
-            border-top-color: var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .lightbox-loading p {
-            margin-top: 20px;
-            color: var(--text-muted);
         }
 
         /* ═══════════════════════════════════════════════════════════ */
@@ -770,6 +736,7 @@
 
             .lightbox-audio-container {
                 padding: 40px 30px;
+                min-width: 280px;
             }
 
             .lightbox-audio-icon {
@@ -851,12 +818,8 @@
             <a class="lightbox-external" id="lightboxExternal" href="#" target="_blank">
                 🔗 فتح في تاب جديد
             </a>
-            <div class="lightbox-media" id="lightboxMedia">
-                <!-- Content will be injected here -->
-            </div>
-            <div class="lightbox-info" id="lightboxInfo">
-                <!-- Info will be injected here -->
-            </div>
+            <div class="lightbox-media" id="lightboxMedia"></div>
+            <div class="lightbox-info" id="lightboxInfo"></div>
         </div>
     </div>
 
@@ -868,17 +831,17 @@
 
     <script>
         // ═══════════════════════════════════════════════════════════
-        //                    Toggle Menu (Mobile)
+        //                    Toggle Menu
         // ═══════════════════════════════════════════════════════════
         function toggleMenu() {
             document.getElementById('navLinks').classList.toggle('active');
         }
 
         // ═══════════════════════════════════════════════════════════
-        //                    Get Links & Thumbnails
+        //                    Helper Functions
         // ═══════════════════════════════════════════════════════════
         function getExternalLink(memory) {
-            if (memory.type === 'image' && memory.driveId) {
+            if (memory.driveId) {
                 return `https://drive.google.com/file/d/${memory.driveId}/view`;
             }
             return memory.link || '#';
@@ -897,8 +860,6 @@
         }
 
         function getArchiveEmbedLink(archiveUrl) {
-            // Extract the item ID from archive.org URL
-            // https://archive.org/details/record1_202604 -> record1_202604
             const match = archiveUrl.match(/archive\.org\/details\/([^\/\?]+)/);
             if (match) {
                 return `https://archive.org/embed/${match[1]}`;
@@ -907,7 +868,7 @@
         }
 
         // ═══════════════════════════════════════════════════════════
-        //                    LIGHTBOX FUNCTIONS
+        //                    LIGHTBOX
         // ═══════════════════════════════════════════════════════════
         function openLightbox(index) {
             const memory = memoriesData[index];
@@ -921,20 +882,20 @@
             // Set external link
             externalBtn.href = getExternalLink(memory);
 
-            // Generate media content based on type
             let mediaHTML = '';
-            
+
+            // 📷 صورة
             if (memory.type === 'image') {
                 mediaHTML = `
                     <img src="${getImageFullSize(memory.driveId)}" 
                          alt="${memory.title}"
                          onload="this.style.opacity=1"
                          style="opacity: 0; transition: opacity 0.3s ease;"
-                         onerror="this.onerror=null; this.src='https://via.placeholder.com/800x600/1a1a2e/e91e63?text=📷+تعذر+التحميل'">
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/800x600/1a1a2e/e91e63?text=📷'">
                 `;
-            } 
+            }
+            // 🎬 فيديو
             else if (memory.type === 'video') {
-                // Check if it's a Google Drive link
                 if (memory.driveId) {
                     mediaHTML = `
                         <iframe src="${getDriveEmbedLink(memory.driveId)}" 
@@ -942,51 +903,32 @@
                                 allowfullscreen>
                         </iframe>
                     `;
-                } else if (memory.link && memory.link.includes('drive.google.com')) {
-                    // Extract ID from folder or file link
-                    const match = memory.link.match(/\/d\/([^\/]+)|\/folders\/([^\/\?]+)/);
-                    const id = match ? (match[1] || match[2]) : '';
-                    if (id && !memory.link.includes('folders')) {
-                        mediaHTML = `
-                            <iframe src="https://drive.google.com/file/d/${id}/preview" 
-                                    allow="autoplay; encrypted-media" 
-                                    allowfullscreen>
-                            </iframe>
-                        `;
-                    } else {
-                        // It's a folder, show message
-                        mediaHTML = `
-                            <div class="lightbox-audio-container">
-                                <div class="lightbox-audio-icon">📁</div>
-                                <p style="color: var(--text-muted); margin-bottom: 20px;">
-                                    ده فولدر فيه فيديوهات<br>اضغط على الزرار فوق لفتحه
-                                </p>
-                            </div>
-                        `;
-                    }
                 }
-            } 
+            }
+            // 🎵 صوت
             else if (memory.type === 'audio') {
-                if (memory.link && memory.link.includes('archive.org')) {
-                    mediaHTML = `
-                        <div class="lightbox-audio-container">
-                            <div class="lightbox-audio-icon">🎵</div>
-                            <iframe src="${getArchiveEmbedLink(memory.link)}" 
-                                    width="500" 
-                                    height="140" 
-                                    frameborder="0" 
-                                    style="border-radius: 10px; max-width: 100%;">
-                            </iframe>
-                        </div>
-                    `;
-                } else if (memory.driveId) {
+                // Google Drive
+                if (memory.driveId) {
                     mediaHTML = `
                         <div class="lightbox-audio-container">
                             <div class="lightbox-audio-icon">🎵</div>
                             <iframe src="${getDriveEmbedLink(memory.driveId)}" 
-                                    width="500" 
-                                    height="80" 
-                                    style="border-radius: 10px; max-width: 100%;">
+                                    width="400" 
+                                    height="100"
+                                    allow="autoplay">
+                            </iframe>
+                        </div>
+                    `;
+                }
+                // Archive.org
+                else if (memory.link && memory.link.includes('archive.org')) {
+                    mediaHTML = `
+                        <div class="lightbox-audio-container">
+                            <div class="lightbox-audio-icon">🎵</div>
+                            <iframe src="${getArchiveEmbedLink(memory.link)}" 
+                                    width="400" 
+                                    height="140" 
+                                    frameborder="0">
                             </iframe>
                         </div>
                     `;
@@ -995,7 +937,7 @@
 
             mediaContainer.innerHTML = mediaHTML;
 
-            // Generate info
+            // Info
             const dateHTML = memory.date && memory.date.trim() !== '' 
                 ? `<span class="lightbox-date">📅 ${memory.date}</span>` 
                 : '';
@@ -1006,7 +948,6 @@
                 <p class="lightbox-description">${memory.description}</p>
             `;
 
-            // Show lightbox
             lightbox.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -1018,7 +959,6 @@
             lightbox.classList.remove('active');
             document.body.style.overflow = '';
             
-            // Clear media after animation
             setTimeout(() => {
                 mediaContainer.innerHTML = '';
             }, 300);
@@ -1030,20 +970,17 @@
             }
         }
 
-        // Keyboard support
+        // Escape key
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeLightbox();
-            }
+            if (e.key === 'Escape') closeLightbox();
         });
 
         // ═══════════════════════════════════════════════════════════
-        //                    Generate Memory Card HTML
+        //                    Generate Card HTML
         // ═══════════════════════════════════════════════════════════
         function generateMemoryCardHTML(memory, index) {
             let mediaHTML = '';
 
-            // 📷 صورة
             if (memory.type === 'image') {
                 mediaHTML = `
                     <div class="memory-media" onclick="openLightbox(${index})">
@@ -1051,14 +988,11 @@
                              alt="${memory.title}" 
                              loading="lazy"
                              onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300/1a1a2e/e91e63?text=📷'">
-                        <div class="click-overlay">
-                            <span>🔍</span>
-                        </div>
+                        <div class="click-overlay"><span>🔍</span></div>
                         <span class="memory-type-badge">📷 صورة</span>
                     </div>
                 `;
             }
-            // 🎬 فيديو
             else if (memory.type === 'video') {
                 mediaHTML = `
                     <div class="memory-media" onclick="openLightbox(${index})">
@@ -1066,14 +1000,11 @@
                             <span>🎬</span>
                             <p class="placeholder-text">اضغط للمشاهدة</p>
                         </div>
-                        <div class="click-overlay">
-                            <span>▶️</span>
-                        </div>
+                        <div class="click-overlay"><span>▶️</span></div>
                         <span class="memory-type-badge">🎬 فيديو</span>
                     </div>
                 `;
             }
-            // 🎵 صوت
             else if (memory.type === 'audio') {
                 mediaHTML = `
                     <div class="memory-media" onclick="openLightbox(${index})">
@@ -1081,14 +1012,11 @@
                             <span>🎵</span>
                             <p class="placeholder-text">اضغط للاستماع</p>
                         </div>
-                        <div class="click-overlay">
-                            <span>🎧</span>
-                        </div>
+                        <div class="click-overlay"><span>🎧</span></div>
                         <span class="memory-type-badge">🎵 تسجيل</span>
                     </div>
                 `;
             }
-            // 📝 نص
             else if (memory.type === 'text') {
                 mediaHTML = `
                     <div class="text-card-icon">
@@ -1097,7 +1025,6 @@
                 `;
             }
 
-            // التاريخ (اختياري)
             const dateHTML = memory.date && memory.date.trim() !== '' 
                 ? `<span class="memory-date">📅 ${memory.date}</span>` 
                 : '';
@@ -1124,7 +1051,6 @@
             const grid = document.getElementById('memoriesGrid');
             grid.innerHTML = '';
 
-            // لو مفيش بيانات
             if (typeof memoriesData === 'undefined' || memoriesData.length === 0) {
                 grid.innerHTML = `
                     <div class="memories-empty">
@@ -1136,12 +1062,10 @@
                 return;
             }
 
-            // فلترة البيانات
             const filteredData = filter === 'all' 
                 ? memoriesData 
                 : memoriesData.filter(m => m.type === filter);
 
-            // لو مفيش نتائج للفلتر
             if (filteredData.length === 0) {
                 const typeNames = {
                     'image': 'صور',
@@ -1159,11 +1083,8 @@
                 return;
             }
 
-            // إنشاء الكروت
             filteredData.forEach((memory, index) => {
-                // نحتاج الـ index الأصلي مش المفلتر
                 const originalIndex = memoriesData.indexOf(memory);
-                
                 const card = document.createElement('div');
                 card.className = memory.type === 'text' ? 'memory-card text-only' : 'memory-card';
                 card.style.animationDelay = `${index * 0.1}s`;
@@ -1173,19 +1094,16 @@
         }
 
         // ═══════════════════════════════════════════════════════════
-        //                    Filter Memories
+        //                    Filter
         // ═══════════════════════════════════════════════════════════
         function filterMemories(filter, btn) {
-            // تحديث الأزرار النشطة
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            
-            // عرض الذكريات المفلترة
             renderMemories(filter);
         }
 
         // ═══════════════════════════════════════════════════════════
-        //                    Update Stats
+        //                    Stats
         // ═══════════════════════════════════════════════════════════
         function updateStats() {
             const stats = document.getElementById('memoriesStats');
@@ -1206,26 +1124,10 @@
                     <div class="stat-number">${total}</div>
                     <div class="stat-label">📚 إجمالي</div>
                 </div>
-                ${images > 0 ? `
-                <div class="stat-item">
-                    <div class="stat-number">${images}</div>
-                    <div class="stat-label">📷 صور</div>
-                </div>` : ''}
-                ${videos > 0 ? `
-                <div class="stat-item">
-                    <div class="stat-number">${videos}</div>
-                    <div class="stat-label">🎬 فيديو</div>
-                </div>` : ''}
-                ${audios > 0 ? `
-                <div class="stat-item">
-                    <div class="stat-number">${audios}</div>
-                    <div class="stat-label">🎵 تسجيلات</div>
-                </div>` : ''}
-                ${texts > 0 ? `
-                <div class="stat-item">
-                    <div class="stat-number">${texts}</div>
-                    <div class="stat-label">📝 كلام</div>
-                </div>` : ''}
+                ${images > 0 ? `<div class="stat-item"><div class="stat-number">${images}</div><div class="stat-label">📷 صور</div></div>` : ''}
+                ${videos > 0 ? `<div class="stat-item"><div class="stat-number">${videos}</div><div class="stat-label">🎬 فيديو</div></div>` : ''}
+                ${audios > 0 ? `<div class="stat-item"><div class="stat-number">${audios}</div><div class="stat-label">🎵 تسجيلات</div></div>` : ''}
+                ${texts > 0 ? `<div class="stat-item"><div class="stat-number">${texts}</div><div class="stat-label">📝 كلام</div></div>` : ''}
             `;
         }
 
