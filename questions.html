@@ -17,67 +17,252 @@
             <li><a href="daily.html">رسائل يومية</a></li>
             <li><a href="questions.html" class="active">اسأليني</a></li>
         </ul>
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
     </nav>
 
     <main class="main-content">
         <h1 class="page-title">💭 اسأليني أي حاجة</h1>
-        <p class="page-subtitle">دوسي على أي سؤال وهتلاقي الإجابة 💕</p>
+        <p class="page-subtitle">دوسي على أي سؤال وهتلاقي الإجابة ♥️</p>
+        
+        <!-- Back Button -->
+        <div class="back-section">
+            <a href="home.html" class="back-btn">
+                → رجوع للرئيسية
+            </a>
+        </div>
+
+        <!-- Fun Stats -->
+        <div class="fun-stats">
+            <div class="stat-card">
+                <span class="stat-number">∞</span>
+                <span class="stat-label">مرة قلتلك بحبك</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">💕</span>
+                <span class="stat-label">حبي ليكي</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="days-counter">0</span>
+                <span class="stat-label">يوم بحبك</span>
+            </div>
+        </div>
 
         <div class="questions-container">
+            <!-- Question 1 -->
             <div class="question-card" onclick="toggleAnswer(this)">
                 <div class="question">
-                    <span class="q-icon">💖</span>
-                    بتحبني ليه؟
+                    <span class="q-icon">♥️</span>
+                    <span class="q-text">بتحبني ليه؟</span>
+                    <span class="q-arrow">↓</span>
                 </div>
                 <div class="answer hidden">
                     <p>بحبك عشان أنتِ أنتِ... عشان ضحكتك، عشان طيبتك، 
                     عشان بتفهميني من غير ما أتكلم، عشان بحس معاكي 
                     إني أحسن نسخة من نفسي 💕</p>
+                    <p class="answer-extra">وكمان عشان... 😉🫣</p>
                 </div>
             </div>
 
+            <!-- Question 2 -->
             <div class="question-card" onclick="toggleAnswer(this)">
                 <div class="question">
                     <span class="q-icon">🌙</span>
-                    إيه أكتر حاجة بتحبها فيا؟
+                    <span class="q-text">إيه أكتر حاجة بتحبها فيا؟</span>
+                    <span class="q-arrow">↓</span>
                 </div>
                 <div class="answer hidden">
-                    <p>اكتب هنا إجابتك...</p>
+                    <p>كل حاجة! بس لو لازم أختار... عينيكي لما بتبصيلي، وضحكتك لما بتضحكي من قلبك 😂♥️</p>
                 </div>
             </div>
 
+            <!-- Question 3 -->
             <div class="question-card" onclick="toggleAnswer(this)">
                 <div class="question">
                     <span class="q-icon">✨</span>
-                    لو هتوصفني في كلمة واحدة؟
+                    <span class="q-text">لو هتوصفني في كلمة واحدة؟</span>
+                    <span class="q-arrow">↓</span>
                 </div>
                 <div class="answer hidden">
-                    <p>اكتب هنا إجابتك...</p>
+                    <p>"حياتي" ❤️</p>
+                    <p>أو "قمري" 🌙</p>
+                    <p>أو "كل حاجة" 😉</p>
                 </div>
             </div>
 
+            <!-- Question 4 -->
             <div class="question-card" onclick="toggleAnswer(this)">
                 <div class="question">
                     <span class="q-icon">🎵</span>
-                    إيه الأغنية اللي بتفكرك بيا؟
+                    <span class="q-text">إيه الأغنية اللي بتفكرك بيا؟</span>
+                    <span class="q-arrow">↓</span>
                 </div>
                 <div class="answer hidden">
-                    <p>اكتب هنا إجابتك...</p>
+                    <p>اكتب هنا اسم الأغنية... 🎶</p>
+                    <p>كل ما أسمعها بفتكرك وبتبسم 🫣</p>
                 </div>
             </div>
 
+            <!-- Question 5 -->
             <div class="question-card" onclick="toggleAnswer(this)">
                 <div class="question">
                     <span class="q-icon">🌟</span>
-                    إيه أحلى ذكرى ليك معايا؟
+                    <span class="q-text">إيه أحلى ذكرى ليك معايا؟</span>
+                    <span class="q-arrow">↓</span>
                 </div>
                 <div class="answer hidden">
-                    <p>اكتب هنا إجابتك...</p>
+                    <p>اكتب هنا أحلى ذكرى... ✨</p>
+                </div>
+            </div>
+
+            <!-- Question 6 -->
+            <div class="question-card" onclick="toggleAnswer(this)">
+                <div class="question">
+                    <span class="q-icon">😂</span>
+                    <span class="q-text">إيه أكتر موقف ضحكنا فيه؟</span>
+                    <span class="q-arrow">↓</span>
+                </div>
+                <div class="answer hidden">
+                    <p>فاكر لما... 😂😂</p>
+                    <p>اكتب الموقف هنا!</p>
+                </div>
+            </div>
+
+            <!-- Question 7 -->
+            <div class="question-card" onclick="toggleAnswer(this)">
+                <div class="question">
+                    <span class="q-icon">🫣</span>
+                    <span class="q-text">إيه اللي بتحبه في شخصيتي؟</span>
+                    <span class="q-arrow">↓</span>
+                </div>
+                <div class="answer hidden">
+                    <p>بحب فيكي إنك... ♥️</p>
+                    <p>اكتب هنا!</p>
+                </div>
+            </div>
+
+            <!-- Question 8 -->
+            <div class="question-card" onclick="toggleAnswer(this)">
+                <div class="question">
+                    <span class="q-icon">💭</span>
+                    <span class="q-text">بتفكر فيا كتير؟</span>
+                    <span class="q-arrow">↓</span>
+                </div>
+                <div class="answer hidden">
+                    <p>أنتِ في بالي 24 ساعة! 🌚</p>
+                    <p>الصبح أول ما أصحى... بفكر فيكي</p>
+                    <p>بالليل قبل ما أنام... بفكر فيكي</p>
+                    <p>في النص... برضو بفكر فيكي 😂♥️</p>
+                </div>
+            </div>
+
+            <!-- Question 9 -->
+            <div class="question-card" onclick="toggleAnswer(this)">
+                <div class="question">
+                    <span class="q-icon">🔮</span>
+                    <span class="q-text">شايف مستقبلنا إزاي؟</span>
+                    <span class="q-arrow">↓</span>
+                </div>
+                <div class="answer hidden">
+                    <p>شايفنا مع بعض... ♥️</p>
+                    <p>بنكبر مع بعض</p>
+                    <p>بنحقق أحلامنا مع بعض</p>
+                    <p>وفضلنا بنحب بعض أكتر كل يوم 😉✨</p>
+                </div>
+            </div>
+
+            <!-- Question 10 - Secret -->
+            <div class="question-card secret-question" onclick="toggleAnswer(this)">
+                <div class="question">
+                    <span class="q-icon">🤫</span>
+                    <span class="q-text">سر مكنتش عايز أقوله...</span>
+                    <span class="q-arrow">↓</span>
+                </div>
+                <div class="answer hidden">
+                    <p>السر هو... 🫣</p>
+                    <p class="secret-text">إني بحبك أكتر مما تتخيلي! 💕</p>
                 </div>
             </div>
         </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <a href="daily.html" class="action-btn">
+                🎁 شوفي الرسائل اليومية
+            </a>
+            <a href="memories.html" class="action-btn">
+                📸 ذكرياتنا
+            </a>
+            <a href="why.html" class="action-btn">
+                💌 ليه الموقع ده؟
+            </a>
+        </div>
+
+        <!-- Love Quote -->
+        <div class="love-quote">
+            <p id="random-quote">"بحبك من هنا للقمر ورجوع"</p>
+            <button onclick="changeQuote()" class="quote-btn">💕 كلام تاني</button>
+        </div>
     </main>
 
+    <!-- Fixed Back Button -->
+    <a href="home.html" class="fixed-back-btn" title="الرئيسية">
+        🏠
+    </a>
+
     <script src="js/main.js"></script>
+    <script>
+        // Love quotes
+        const quotes = [
+            "بحبك من هنا للقمر ورجوع 🌙",
+            "أنتِ أحلى صدفة في حياتي ✨",
+            "معاكي الدنيا أحلى 💕",
+            "قلبي مليان بيكي ♥️",
+            "أنتِ نصي التاني 😉",
+            "بتكملي حياتي 🫣",
+            "أنتِ أغلى من الدنيا كلها 💕",
+            "حبك نعمة من ربنا ✨",
+            "أنتِ سر سعادتي 😊",
+            "معاكي حاسس بالأمان 🏠"
+        ];
+        
+        function changeQuote() {
+            const quoteEl = document.getElementById('random-quote');
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            
+            quoteEl.style.opacity = 0;
+            setTimeout(() => {
+                quoteEl.textContent = randomQuote;
+                quoteEl.style.opacity = 1;
+            }, 300);
+        }
+        
+        // Days counter (من أول يوم)
+        const startDate = new Date('2024-01-01'); // غير التاريخ لأول يوم حب
+        const today = new Date();
+        const diffTime = Math.abs(today - startDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        document.getElementById('days-counter').textContent = diffDays;
+        
+        // Animate counter
+        function animateCounter(el, target) {
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    el.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    el.textContent = Math.floor(current);
+                }
+            }, 30);
+        }
+        
+        // Run on load
+        document.addEventListener('DOMContentLoaded', () => {
+            animateCounter(document.getElementById('days-counter'), diffDays);
+        });
+    </script>
 </body>
 </html>
