@@ -452,3 +452,57 @@ function showToast(message, type = 'info') {
     if (existing) existing.remove();
     
     const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    requestAnimationFrame(() => toast.classList.add('show'));
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 2500);
+}
+
+// ============= Keyboard (Volume only) =============
+document.addEventListener('keydown', (e) => {
+    const modal = document.getElementById('audio-modal');
+    const audio = document.getElementById('audio-element');
+    
+    if (!modal || modal.classList.contains('hidden')) return;
+    
+    if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (audio) {
+            audio.volume = Math.min(1, audio.volume + 0.1);
+            const volumeSlider = document.getElementById('volume-slider');
+            if (volumeSlider) volumeSlider.value = audio.volume;
+            updateVolumeIcon(audio.volume);
+        }
+    }
+    
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (audio) {
+            audio.volume = Math.max(0, audio.volume - 0.1);
+            const volumeSlider = document.getElementById('volume-slider');
+            if (volumeSlider) volumeSlider.value = audio.volume;
+            updateVolumeIcon(audio.volume);
+        }
+    }
+    
+    if (e.key === 'Escape') {
+        closeModal();
+    }
+});
+
+// ============= Initialize =============
+document.addEventListener('DOMContentLoaded', () => {
+    generateFolders();
+});
+
+// Close modal when clicking outside
+document.addEventListener('click', (e) => {
+    const modal = document.getElementById('audio-modal');
+    if (e.target === modal) closeModal();
+});
