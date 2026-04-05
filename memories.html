@@ -633,40 +633,45 @@
         function toggleMenu() {
             document.getElementById('navLinks').classList.toggle('active');
         }
-
+    
         // ═══════════════════════════════════════════════════════════
-        //                    Generate Drive Links
+        //                    Get Links
         // ═══════════════════════════════════════════════════════════
-        function getDriveViewLink(driveId) {
-            return `https://drive.google.com/file/d/${driveId}/view`;
+        function getMemoryLink(memory) {
+            if (memory.type === 'image' && memory.driveId) {
+                return `https://drive.google.com/file/d/${memory.driveId}/view`;
+            }
+            return memory.link || '#';
         }
-
-        function getDriveThumbnail(driveId) {
+    
+        function getImageThumbnail(driveId) {
             return `https://lh3.googleusercontent.com/d/${driveId}`;
         }
-
+    
         // ═══════════════════════════════════════════════════════════
-        //                    Open Drive Link
+        //                    Open Link
         // ═══════════════════════════════════════════════════════════
-        function openDriveLink(driveId) {
-            const link = getDriveViewLink(driveId);
-            window.open(link, '_blank');
+        function openMemoryLink(memory) {
+            const link = getMemoryLink(memory);
+            if (link && link !== '#') {
+                window.open(link, '_blank');
+            }
         }
-
+    
         // ═══════════════════════════════════════════════════════════
         //                    Generate Memory Card HTML
         // ═══════════════════════════════════════════════════════════
-        function generateMemoryCardHTML(memory) {
+        function generateMemoryCardHTML(memory, index) {
             let mediaHTML = '';
-
+    
             // 📷 صورة
             if (memory.type === 'image') {
                 mediaHTML = `
-                    <div class="memory-media" onclick="openDriveLink('${memory.driveId}')">
-                        <img src="${getDriveThumbnail(memory.driveId)}" 
+                    <div class="memory-media" onclick="openMemoryLink(memoriesData[${index}])">
+                        <img src="${getImageThumbnail(memory.driveId)}" 
                              alt="${memory.title}" 
                              loading="lazy"
-                             onerror="this.src='https://via.placeholder.com/400x300/1a1a2e/e91e63?text=📷'">
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300/1a1a2e/e91e63?text=📷'">
                         <div class="click-overlay">
                             <span>🔗</span>
                         </div>
@@ -677,7 +682,7 @@
             // 🎬 فيديو
             else if (memory.type === 'video') {
                 mediaHTML = `
-                    <div class="memory-media" onclick="openDriveLink('${memory.driveId}')">
+                    <div class="memory-media" onclick="openMemoryLink(memoriesData[${index}])">
                         <div class="video-placeholder">
                             <span>🎬</span>
                             <p class="placeholder-text">اضغط للمشاهدة</p>
@@ -692,7 +697,7 @@
             // 🎵 صوت
             else if (memory.type === 'audio') {
                 mediaHTML = `
-                    <div class="memory-media" onclick="openDriveLink('${memory.driveId}')">
+                    <div class="memory-media" onclick="openMemoryLink(memoriesData[${index}])">
                         <div class="audio-placeholder">
                             <span>🎵</span>
                             <p class="placeholder-text">اضغط للاستماع</p>
@@ -712,12 +717,12 @@
                     </div>
                 `;
             }
-
+    
             // التاريخ (اختياري)
             const dateHTML = memory.date && memory.date.trim() !== '' 
                 ? `<span class="memory-date">📅 ${memory.date}</span>` 
                 : '';
-
+    
             return `
                 ${mediaHTML}
                 <div class="memory-info">
@@ -732,14 +737,14 @@
                 </div>
             `;
         }
-
+    
         // ═══════════════════════════════════════════════════════════
         //                    Render Memories
         // ═══════════════════════════════════════════════════════════
         function renderMemories(filter = 'all') {
             const grid = document.getElementById('memoriesGrid');
             grid.innerHTML = '';
-
+    
             // لو مفيش بيانات
             if (typeof memoriesData === 'undefined' || memoriesData.length === 0) {
                 grid.innerHTML = `
@@ -751,12 +756,12 @@
                 `;
                 return;
             }
-
+    
             // فلترة البيانات
             const filteredData = filter === 'all' 
                 ? memoriesData 
                 : memoriesData.filter(m => m.type === filter);
-
+    
             // لو مفيش نتائج للفلتر
             if (filteredData.length === 0) {
                 const typeNames = {
@@ -774,17 +779,20 @@
                 `;
                 return;
             }
-
+    
             // إنشاء الكروت
             filteredData.forEach((memory, index) => {
+                // نحتاج الـ index الأصلي مش المفلتر
+                const originalIndex = memoriesData.indexOf(memory);
+                
                 const card = document.createElement('div');
                 card.className = memory.type === 'text' ? 'memory-card text-only' : 'memory-card';
                 card.style.animationDelay = `${index * 0.1}s`;
-                card.innerHTML = generateMemoryCardHTML(memory);
+                card.innerHTML = generateMemoryCardHTML(memory, originalIndex);
                 grid.appendChild(card);
             });
         }
-
+    
         // ═══════════════════════════════════════════════════════════
         //                    Filter Memories
         // ═══════════════════════════════════════════════════════════
@@ -796,7 +804,7 @@
             // عرض الذكريات المفلترة
             renderMemories(filter);
         }
-
+    
         // ═══════════════════════════════════════════════════════════
         //                    Update Stats
         // ═══════════════════════════════════════════════════════════
@@ -807,13 +815,13 @@
                 stats.innerHTML = '';
                 return;
             }
-
+    
             const total = memoriesData.length;
             const images = memoriesData.filter(m => m.type === 'image').length;
             const videos = memoriesData.filter(m => m.type === 'video').length;
             const audios = memoriesData.filter(m => m.type === 'audio').length;
             const texts = memoriesData.filter(m => m.type === 'text').length;
-
+    
             stats.innerHTML = `
                 <div class="stat-item">
                     <div class="stat-number">${total}</div>
@@ -841,7 +849,7 @@
                 </div>` : ''}
             `;
         }
-
+    
         // ═══════════════════════════════════════════════════════════
         //                    Initialize
         // ═══════════════════════════════════════════════════════════
