@@ -443,11 +443,9 @@
             updateStats();
         }
 
-        // ═══════ Generate Card HTML ═══════
         function generateMemoryCard(memory, index) {
             let mediaHTML = '';
-
-            // الجزء بتاع الميديا (صورة أو فيديو فقط)
+        
             if (memory.type === 'image') {
                 mediaHTML = `
                     <div class="memory-media" onclick="openLightbox(${index})">
@@ -458,23 +456,36 @@
                     </div>
                 `;
             } else if (memory.type === 'video') {
-                mediaHTML = `
-                    <div class="memory-media" onclick="openLightbox(${index})">
-                        <video muted>
-                            <source src="${memory.file}" type="video/mp4">
-                        </video>
-                        <div class="play-overlay"><span>▶️</span></div>
-                        <span class="memory-type-badge">🎬 فيديو</span>
-                    </div>
-                `;
+                // Check if Google Drive
+                if (memory.file.includes('drive.google.com')) {
+                    // For Google Drive, show thumbnail with play button
+                    const videoId = memory.file.match(/\/d\/(.+?)\//)?.[1] || '';
+                    mediaHTML = `
+                        <div class="memory-media" onclick="openLightbox(${index})">
+                            <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background: linear-gradient(135deg, rgba(233,30,99,0.3), rgba(156,39,176,0.3));">
+                                <span style="font-size: 4rem;">🎬</span>
+                            </div>
+                            <div class="play-overlay" style="opacity:1;"><span>▶️</span></div>
+                            <span class="memory-type-badge">🎬 فيديو</span>
+                        </div>
+                    `;
+                } else {
+                    mediaHTML = `
+                        <div class="memory-media" onclick="openLightbox(${index})">
+                            <video muted>
+                                <source src="${memory.file}" type="video/mp4">
+                            </video>
+                            <div class="play-overlay"><span>▶️</span></div>
+                            <span class="memory-type-badge">🎬 فيديو</span>
+                        </div>
+                    `;
+                }
             }
-            // لو text مش هيبقى في mediaHTML
-
-            // جزء التاريخ (اختياري)
+        
             const dateHTML = memory.date && memory.date.trim() !== '' 
                 ? `<span class="memory-date">📅 ${memory.date}</span>` 
                 : '';
-
+        
             return `
                 ${mediaHTML}
                 <div class="memory-info">
@@ -539,31 +550,44 @@
             `;
         }
 
-        // ═══════ Lightbox (للصور والفيديوهات فقط) ═══════
+        // ═══════ Lightbox ═══════
         function openLightbox(index) {
             const memory = memoriesData[index];
             
-            // النص مش بيفتح lightbox
             if (memory.type === 'text') return;
-
+        
             const lightbox = document.getElementById('lightbox');
             const mediaContainer = document.getElementById('lightbox-media');
             const title = document.getElementById('lightbox-title');
             const description = document.getElementById('lightbox-description');
-
+        
             title.textContent = (memory.emoji || '') + ' ' + memory.title;
             description.textContent = memory.description;
-
+        
             if (memory.type === 'image') {
                 mediaContainer.innerHTML = `<img src="${memory.file}" alt="${memory.title}">`;
             } else if (memory.type === 'video') {
-                mediaContainer.innerHTML = `
-                    <video controls autoplay style="max-width: 100%; max-height: 70vh; border-radius: 10px;">
-                        <source src="${memory.file}" type="video/mp4">
-                    </video>
-                `;
+                // Check if it's Google Drive
+                if (memory.file.includes('drive.google.com')) {
+                    mediaContainer.innerHTML = `
+                        <iframe 
+                            src="${memory.file}" 
+                            width="800" 
+                            height="450" 
+                            style="max-width: 90vw; max-height: 70vh; border-radius: 10px; border: none;"
+                            allow="autoplay"
+                            allowfullscreen>
+                        </iframe>
+                    `;
+                } else {
+                    mediaContainer.innerHTML = `
+                        <video controls autoplay style="max-width: 100%; max-height: 70vh; border-radius: 10px;">
+                            <source src="${memory.file}" type="video/mp4">
+                        </video>
+                    `;
+                }
             }
-
+        
             lightbox.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
