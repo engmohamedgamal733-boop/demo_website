@@ -20,16 +20,27 @@ const wrongMessages = [
     "🤔 مش دي... بتنسي كلمة السر بتاعتنا؟",
     "😂 هو أنا لازم أقولهالك؟",
     "🌚 غلط تاني... دوسي على المساعدة",
-    "♥️ بحبك بس برضو غلط 😂"
+    "♥️ بحبك بس برضو غلط 😂",
+    "🫣 قربتي... أو لا مش قربتي",
+    "😉 جربي تفكري فيا وأنا بقولها",
+    "🌙 لأ مش دي يا قمر"
 ];
 
+// ============= Check Password =============
 function checkPassword() {
-    const password = document.getElementById('password').value;
-    const errorMsg = document.getElementById('error-msg');
     const passwordInput = document.getElementById('password');
+    const errorMsg = document.getElementById('error-msg');
+    const password = passwordInput ? passwordInput.value : '';
+    
+    if (!password.trim()) {
+        errorMsg.innerHTML = "🌚 اكتبي حاجة الأول يا قمر";
+        errorMsg.style.color = "#ff6b6b";
+        shakeElement(passwordInput);
+        return;
+    }
     
     if (password === correctPassword) {
-        // Success animation
+        // Success!
         document.querySelector('.login-container').classList.add('success');
         errorMsg.innerHTML = "✅ أيوه صح! مستنياكي جوه ♥️";
         errorMsg.style.color = "#4ade80";
@@ -51,14 +62,14 @@ function checkPassword() {
         errorMsg.style.color = "#ff6b6b";
         
         // Shake animation
-        passwordInput.classList.add('shake');
-        setTimeout(() => {
-            passwordInput.classList.remove('shake');
-        }, 500);
+        shakeElement(passwordInput);
         
         // Show hint button after 2 wrong attempts
         if (wrongAttempts >= 2) {
-            document.querySelector('.hint-section').classList.add('show-hint');
+            const hintSection = document.querySelector('.hint-section');
+            if (hintSection) {
+                hintSection.classList.add('show-hint');
+            }
         }
         
         // Clear input
@@ -67,42 +78,61 @@ function checkPassword() {
     }
 }
 
+// ============= Shake Element =============
+function shakeElement(element) {
+    if (!element) return;
+    element.classList.add('shake');
+    setTimeout(() => {
+        element.classList.remove('shake');
+    }, 500);
+}
+
+// ============= Hints =============
 function showHint() {
     const hintsContainer = document.getElementById('hints-container');
-    hintsContainer.classList.remove('hidden');
-    document.getElementById('hint-text').innerHTML = hints[0];
-    currentHint = 0;
+    if (hintsContainer) {
+        hintsContainer.classList.remove('hidden');
+        document.getElementById('hint-text').innerHTML = hints[0];
+        currentHint = 0;
+    }
 }
 
 function nextHint() {
     currentHint = (currentHint + 1) % hints.length;
-    document.getElementById('hint-text').innerHTML = hints[currentHint];
-    
-    // Add bounce animation
     const hintText = document.getElementById('hint-text');
-    hintText.classList.add('bounce');
-    setTimeout(() => hintText.classList.remove('bounce'), 500);
-}
-
-// Confetti Effect
-function createConfetti() {
-    const colors = ['#e91e63', '#ff4081', '#f50057', '#ff80ab', '#ffd700', '#fff'];
-    const confettiCount = 50;
-    
-    for (let i = 0; i < confettiCount; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.left = Math.random() * 100 + 'vw';
-        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        confetti.style.animationDelay = Math.random() * 2 + 's';
-        confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
-        document.body.appendChild(confetti);
-        
-        setTimeout(() => confetti.remove(), 4000);
+    if (hintText) {
+        hintText.innerHTML = hints[currentHint];
+        hintText.classList.add('bounce');
+        setTimeout(() => hintText.classList.remove('bounce'), 500);
     }
 }
 
-// Check authentication on protected pages
+// ============= Confetti Effect =============
+function createConfetti() {
+    const colors = ['#e91e63', '#ff4081', '#f50057', '#ff80ab', '#ffd700', '#fff', '#9c27b0'];
+    const confettiCount = 60;
+    
+    for (let i = 0; i < confettiCount; i++) {
+        setTimeout(() => {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            confetti.style.width = (Math.random() * 8 + 5) + 'px';
+            confetti.style.height = confetti.style.width;
+            document.body.appendChild(confetti);
+            
+            setTimeout(() => {
+                if (confetti.parentNode) {
+                    confetti.remove();
+                }
+            }, 4000);
+        }, i * 30);
+    }
+}
+
+// ============= Authentication Check =============
 function checkAuth() {
     if (!sessionStorage.getItem('authenticated')) {
         window.location.href = 'index.html';
@@ -110,171 +140,163 @@ function checkAuth() {
 }
 
 // Run on protected pages
-if (!window.location.pathname.includes('index.html') && 
-    !window.location.pathname.endsWith('/') &&
-    window.location.pathname !== '/') {
-    // Don't check on index page
-    if (document.querySelector('.login-page') === null) {
+(function() {
+    const path = window.location.pathname;
+    const isLoginPage = path.includes('index.html') || path.endsWith('/') || path === '';
+    const hasLoginContainer = document.querySelector('.login-page');
+    
+    if (!isLoginPage && !hasLoginContainer) {
         checkAuth();
+    }
+})();
+
+// ============= Navigation Toggle =============
+function toggleMenu() {
+    const navLinks = document.querySelector('.nav-links');
+    const menuBtn = document.querySelector('.menu-toggle');
+    
+    if (navLinks) {
+        navLinks.classList.toggle('active');
+        if (menuBtn) {
+            menuBtn.innerHTML = navLinks.classList.contains('active') ? '✕' : '☰';
+        }
     }
 }
 
-// ============= Navigation =============
-function toggleMenu() {
+// Close menu when clicking outside
+document.addEventListener('click', (e) => {
     const navLinks = document.querySelector('.nav-links');
-    navLinks.classList.toggle('active');
-    
-    // Change icon
     const menuBtn = document.querySelector('.menu-toggle');
-    menuBtn.innerHTML = navLinks.classList.contains('active') ? '✕' : '☰';
-}
+    
+    if (navLinks && navLinks.classList.contains('active')) {
+        if (!e.target.closest('.nav-links') && !e.target.closest('.menu-toggle')) {
+            navLinks.classList.remove('active');
+            if (menuBtn) menuBtn.innerHTML = '☰';
+        }
+    }
+});
 
 // ============= Questions Toggle =============
 function toggleAnswer(card) {
     const answer = card.querySelector('.answer');
+    if (!answer) return;
+    
     const isHidden = answer.classList.contains('hidden');
     
     // Close all other answers
     document.querySelectorAll('.question-card .answer').forEach(a => {
         a.classList.add('hidden');
     });
+    document.querySelectorAll('.question-card').forEach(c => {
+        c.classList.remove('active');
+    });
     
     // Toggle current
     if (isHidden) {
         answer.classList.remove('hidden');
         card.classList.add('active');
-    } else {
-        answer.classList.add('hidden');
-        card.classList.remove('active');
     }
 }
 
-// ============= Fun Cursor Trail =============
+// ============= Greeting Based on Time =============
+function setGreeting() {
+    const greeting = document.getElementById('greeting');
+    if (!greeting) return;
+    
+    const hour = new Date().getHours();
+    let greetText = '';
+    let emoji = '';
+    
+    if (hour >= 5 && hour < 12) {
+        greetText = 'صباح الخير يا قمر';
+        emoji = '☀️';
+    } else if (hour >= 12 && hour < 17) {
+        greetText = 'يوم سعيد يا جميلة';
+        emoji = '🌤️';
+    } else if (hour >= 17 && hour < 21) {
+        greetText = 'مساء النور يا عمري';
+        emoji = '🌅';
+    } else {
+        greetText = 'ليلة سعيدة يا حبيبتي';
+        emoji = '🌙';
+    }
+    
+    greeting.textContent = `${greetText} ${emoji}`;
+}
+
+// ============= Heart Trail Effect =============
+let heartTrailEnabled = false;
+
 function createHeartTrail(e) {
+    if (!heartTrailEnabled) return;
+    
     const heart = document.createElement('span');
     heart.className = 'heart-trail';
-    heart.innerHTML = ['♥️', '💕', '💖', '✨'][Math.floor(Math.random() * 4)];
+    heart.innerHTML = ['♥️', '💕', '💖', '✨', '💗'][Math.floor(Math.random() * 5)];
     heart.style.left = e.pageX + 'px';
     heart.style.top = e.pageY + 'px';
     document.body.appendChild(heart);
     
-    setTimeout(() => heart.remove(), 1000);
+    setTimeout(() => {
+        if (heart.parentNode) {
+            heart.remove();
+        }
+    }, 1000);
 }
 
-// ============= Typing Effect =============
-function typeWriter(element, text, speed = 50) {
-    let i = 0;
-    element.innerHTML = '';
-    function type() {
-        if (i < text.length) {
-            element.innerHTML += text.charAt(i);
-            i++;
-            setTimeout(type, speed);
-        }
-    }
-    type();
+// ============= Page Transition =============
+function addPageTransition() {
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.3s ease';
+    
+    requestAnimationFrame(() => {
+        document.body.style.opacity = '1';
+    });
 }
 
 // ============= Initialize =============
 document.addEventListener('DOMContentLoaded', function() {
-    // Password enter key
+    // Page transition
+    addPageTransition();
+    
+    // Set greeting
+    setGreeting();
+    
+    // Password input events
     const passwordInput = document.getElementById('password');
     if (passwordInput) {
+        // Enter key
         passwordInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 checkPassword();
             }
         });
         
-        // Focus on password input
-        passwordInput.focus();
+        // Focus on load
+        setTimeout(() => passwordInput.focus(), 500);
     }
     
-    // Add heart trail on home page (optional - can be heavy)
-    // document.addEventListener('mousemove', createHeartTrail);
-    
-    // Greeting based on time
-    const greeting = document.getElementById('greeting');
-    if (greeting) {
-        const hour = new Date().getHours();
-        let greetText = '';
-        if (hour < 12) greetText = 'صباح الخير يا قمر ☀️';
-        else if (hour < 18) greetText = 'يوم سعيد يا جميلة 🌤️';
-        else greetText = 'مساء النور يا عمري 🌙';
-        greeting.textContent = greetText;
-    }
+    // Enable heart trail on home page (optional)
+    // if (document.querySelector('.home-page')) {
+    //     heartTrailEnabled = true;
+    //     document.addEventListener('mousemove', createHeartTrail);
+    // }
 });
 
-// ============= Add CSS for new animations =============
-const style = document.createElement('style');
-style.textContent = `
-    .shake {
-        animation: shake 0.5s ease-in-out;
-    }
-    
-    @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        20%, 60% { transform: translateX(-10px); }
-        40%, 80% { transform: translateX(10px); }
-    }
-    
-    .bounce {
-        animation: bounce 0.5s ease;
-    }
-    
-    @keyframes bounce {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-    }
-    
-    .confetti {
-        position: fixed;
-        width: 10px;
-        height: 10px;
-        top: -10px;
-        border-radius: 50%;
-        animation: fall linear forwards;
-        z-index: 9999;
-    }
-    
-    @keyframes fall {
-        to {
-            transform: translateY(100vh) rotate(720deg);
-            opacity: 0;
+// ============= Smooth Scroll =============
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
         }
-    }
-    
-    .heart-trail {
-        position: absolute;
-        pointer-events: none;
-        font-size: 20px;
-        animation: fadeUp 1s ease forwards;
-        z-index: 9999;
-    }
-    
-    @keyframes fadeUp {
-        to {
-            opacity: 0;
-            transform: translateY(-50px) scale(0);
-        }
-    }
-    
-    .success {
-        animation: successPulse 0.5s ease;
-    }
-    
-    @keyframes successPulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.02); }
-    }
-    
-    .hint-section {
-        opacity: 0.5;
-        transition: opacity 0.3s ease;
-    }
-    
-    .hint-section.show-hint {
-        opacity: 1;
-    }
-`;
-document.head.appendChild(style);
+    });
+});
+
+// ============= Console Welcome =============
+console.log('%c💕 مرحباً بيكي 💕', 'font-size: 24px; color: #e91e63; font-weight: bold;');
+console.log('%c♥️ الموقع ده معمول بحب ♥️', 'font-size: 14px; color: #ff4081;');
