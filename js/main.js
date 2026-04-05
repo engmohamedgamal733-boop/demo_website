@@ -1,18 +1,22 @@
-// ============= Password & Hints System =============
-const correctPassword = "حبيبتي"; // غير الباسورد هنا
+// ╔════════════════════════════════════════════════════════════╗
+// ║  كلمة السر - غيرها هنا                                     ║
+// ╚════════════════════════════════════════════════════════════╝
+const correctPassword = "حبيبتي"; // ← غير الباسورد هنا
 
+// ╔════════════════════════════════════════════════════════════╗
+// ║  التلميحات - غيرها أو زود عليها هنا                        ║
+// ╚════════════════════════════════════════════════════════════╝
 const hints = [
-    "💡 التلميح الأول: هي كلمة بقولهالك كل يوم ♥️",
-    "🤔 التلميح التاني: بتبدأ بحرف الحاء",
-    "😉 التلميح التالت: من 6 حروف",
-    "🫣 التلميح الأخير: حبي____",
-    "😂 طب خلاص: حبيبتي"
+    "💡 التلميح الأول: اكتب التلميح هنا...",
+    "🤔 التلميح التاني: اكتب التلميح هنا...",
+    "😉 التلميح التالت: اكتب التلميح هنا...",
+    "🫣 التلميح الرابع: اكتب التلميح هنا...",
+    "😂 التلميح الأخير: اكتب التلميح هنا..."
 ];
 
-let currentHint = 0;
-let wrongAttempts = 0;
-
-// رسائل الخطأ المتنوعة
+// ╔════════════════════════════════════════════════════════════╗
+// ║  رسائل الخطأ - غيرها أو زود عليها هنا                      ║
+// ╚════════════════════════════════════════════════════════════╝
 const wrongMessages = [
     "🌚 لا مش دي... جربي تاني يا قمر",
     "🌚 برضو غلط... فكري كويس",
@@ -20,11 +24,11 @@ const wrongMessages = [
     "🤔 مش دي... بتنسي كلمة السر بتاعتنا؟",
     "😂 هو أنا لازم أقولهالك؟",
     "🌚 غلط تاني... دوسي على المساعدة",
-    "♥️ بحبك بس برضو غلط 😂",
-    "🫣 قربتي... أو لا مش قربتي",
-    "😉 جربي تفكري فيا وأنا بقولها",
-    "🌙 لأ مش دي يا قمر"
+    "♥️ بحبك بس برضو غلط 😂"
 ];
+
+let currentHint = 0;
+let wrongAttempts = 0;
 
 // ============= Check Password =============
 function checkPassword() {
@@ -40,18 +44,14 @@ function checkPassword() {
     }
     
     if (password === correctPassword) {
-        // Success!
         document.querySelector('.login-container').classList.add('success');
         errorMsg.innerHTML = "✅ أيوه صح! مستنياكي جوه ♥️";
         errorMsg.style.color = "#4ade80";
         
-        // Confetti effect
         createConfetti();
         
-        // Save to session
         sessionStorage.setItem('authenticated', 'true');
         
-        // Redirect after animation
         setTimeout(() => {
             window.location.href = 'home.html';
         }, 1500);
@@ -61,10 +61,8 @@ function checkPassword() {
         errorMsg.innerHTML = randomMsg;
         errorMsg.style.color = "#ff6b6b";
         
-        // Shake animation
         shakeElement(passwordInput);
         
-        // Show hint button after 2 wrong attempts
         if (wrongAttempts >= 2) {
             const hintSection = document.querySelector('.hint-section');
             if (hintSection) {
@@ -72,7 +70,6 @@ function checkPassword() {
             }
         }
         
-        // Clear input
         passwordInput.value = '';
         passwordInput.focus();
     }
@@ -119,15 +116,9 @@ function createConfetti() {
             confetti.style.left = Math.random() * 100 + 'vw';
             confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
             confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
-            confetti.style.width = (Math.random() * 8 + 5) + 'px';
-            confetti.style.height = confetti.style.width;
             document.body.appendChild(confetti);
             
-            setTimeout(() => {
-                if (confetti.parentNode) {
-                    confetti.remove();
-                }
-            }, 4000);
+            setTimeout(() => confetti.remove(), 4000);
         }, i * 30);
     }
 }
@@ -139,7 +130,6 @@ function checkAuth() {
     }
 }
 
-// Run on protected pages
 (function() {
     const path = window.location.pathname;
     const isLoginPage = path.includes('index.html') || path.endsWith('/') || path === '';
@@ -163,7 +153,6 @@ function toggleMenu() {
     }
 }
 
-// Close menu when clicking outside
 document.addEventListener('click', (e) => {
     const navLinks = document.querySelector('.nav-links');
     const menuBtn = document.querySelector('.menu-toggle');
@@ -183,7 +172,6 @@ function toggleAnswer(card) {
     
     const isHidden = answer.classList.contains('hidden');
     
-    // Close all other answers
     document.querySelectorAll('.question-card .answer').forEach(a => {
         a.classList.add('hidden');
     });
@@ -191,7 +179,6 @@ function toggleAnswer(card) {
         c.classList.remove('active');
     });
     
-    // Toggle current
     if (isHidden) {
         answer.classList.remove('hidden');
         card.classList.add('active');
@@ -205,98 +192,32 @@ function setGreeting() {
     
     const hour = new Date().getHours();
     let greetText = '';
-    let emoji = '';
     
     if (hour >= 5 && hour < 12) {
-        greetText = 'صباح الخير يا قمر';
-        emoji = '☀️';
+        greetText = 'صباح الخير يا قمر ☀️';
     } else if (hour >= 12 && hour < 17) {
-        greetText = 'يوم سعيد يا جميلة';
-        emoji = '🌤️';
+        greetText = 'يوم سعيد يا جميلة 🌤️';
     } else if (hour >= 17 && hour < 21) {
-        greetText = 'مساء النور يا عمري';
-        emoji = '🌅';
+        greetText = 'مساء النور يا عمري 🌅';
     } else {
-        greetText = 'ليلة سعيدة يا حبيبتي';
-        emoji = '🌙';
+        greetText = 'ليلة سعيدة يا حبيبتي 🌙';
     }
     
-    greeting.textContent = `${greetText} ${emoji}`;
-}
-
-// ============= Heart Trail Effect =============
-let heartTrailEnabled = false;
-
-function createHeartTrail(e) {
-    if (!heartTrailEnabled) return;
-    
-    const heart = document.createElement('span');
-    heart.className = 'heart-trail';
-    heart.innerHTML = ['♥️', '💕', '💖', '✨', '💗'][Math.floor(Math.random() * 5)];
-    heart.style.left = e.pageX + 'px';
-    heart.style.top = e.pageY + 'px';
-    document.body.appendChild(heart);
-    
-    setTimeout(() => {
-        if (heart.parentNode) {
-            heart.remove();
-        }
-    }, 1000);
-}
-
-// ============= Page Transition =============
-function addPageTransition() {
-    document.body.style.opacity = '0';
-    document.body.style.transition = 'opacity 0.3s ease';
-    
-    requestAnimationFrame(() => {
-        document.body.style.opacity = '1';
-    });
+    greeting.textContent = greetText;
 }
 
 // ============= Initialize =============
 document.addEventListener('DOMContentLoaded', function() {
-    // Page transition
-    addPageTransition();
-    
-    // Set greeting
     setGreeting();
     
-    // Password input events
     const passwordInput = document.getElementById('password');
     if (passwordInput) {
-        // Enter key
         passwordInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 checkPassword();
             }
         });
         
-        // Focus on load
         setTimeout(() => passwordInput.focus(), 500);
     }
-    
-    // Enable heart trail on home page (optional)
-    // if (document.querySelector('.home-page')) {
-    //     heartTrailEnabled = true;
-    //     document.addEventListener('mousemove', createHeartTrail);
-    // }
 });
-
-// ============= Smooth Scroll =============
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-    });
-});
-
-// ============= Console Welcome =============
-console.log('%c💕 مرحباً بيكي 💕', 'font-size: 24px; color: #e91e63; font-weight: bold;');
-console.log('%c♥️ الموقع ده معمول بحب ♥️', 'font-size: 14px; color: #ff4081;');
