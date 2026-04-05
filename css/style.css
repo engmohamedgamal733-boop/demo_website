@@ -1,3 +1,30 @@
+/* ============= Top Banner ============= */
+.top-banner {
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--primary-color));
+    background-size: 200% 100%;
+    animation: gradientMove 3s ease infinite;
+    color: white;
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* عدل الـ navbar عشان يبقى تحت البانر */
+.navbar {
+    top: 0; /* هيبقى تحت البانر تلقائي */
+}
+
 /* ============= Global Styles ============= */
 * {
     margin: 0;
