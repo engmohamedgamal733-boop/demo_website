@@ -52,19 +52,90 @@ const dailyMoods = {
     26: "🌼", 27: "💓", 28: "🌻", 29: "💗", 30: "👑"
 };
 
+// ╔════════════════════════════════════════════════════════════════════╗
+// ║  🎵 الريكوردات من Google Drive - 30 ريكورد                        ║
+// ║                                                                    ║
+// ║  📌 طريقة الحصول على الـ ID:                                       ║
+// ║  الرابط: https://drive.google.com/file/d/XXXXX/view               ║
+// ║                                       └─────┘                      ║
+// ║                                        ده الـ ID                   ║
+// ║                                                                    ║
+// ║  ⚠️ مهم: لازم الملف يكون "Anyone with link can view"              ║
+// ╚════════════════════════════════════════════════════════════════════╝
+
+const dailyRecordsDriveIds = {
+    //  اليوم :  "الـ Drive ID"
+    
+    1:  "1hPlz-Y7WiQvtNo7wjE3YiGfrCc4WcpIj",   // ← ريكورد اليوم 1
+    2:  "",   // ← ريكورد اليوم 2
+    3:  "",   // ← ريكورد اليوم 3
+    4:  "",   // ← ريكورد اليوم 4
+    5:  "",   // ← ريكورد اليوم 5
+    6:  "",   // ← ريكورد اليوم 6
+    7:  "",   // ← ريكورد اليوم 7
+    8:  "",   // ← ريكورد اليوم 8
+    9:  "",   // ← ريكورد اليوم 9
+    10: "",   // ← ريكورد اليوم 10
+    11: "",   // ← ريكورد اليوم 11
+    12: "",   // ← ريكورد اليوم 12
+    13: "",   // ← ريكورد اليوم 13
+    14: "",   // ← ريكورد اليوم 14
+    15: "",   // ← ريكورد اليوم 15
+    16: "",   // ← ريكورد اليوم 16
+    17: "",   // ← ريكورد اليوم 17
+    18: "",   // ← ريكورد اليوم 18
+    19: "",   // ← ريكورد اليوم 19
+    20: "",   // ← ريكورد اليوم 20
+    21: "",   // ← ريكورد اليوم 21
+    22: "",   // ← ريكورد اليوم 22
+    23: "",   // ← ريكورد اليوم 23
+    24: "",   // ← ريكورد اليوم 24
+    25: "",   // ← ريكورد اليوم 25
+    26: "",   // ← ريكورد اليوم 26
+    27: "",   // ← ريكورد اليوم 27
+    28: "",   // ← ريكورد اليوم 28
+    29: "",   // ← ريكورد اليوم 29
+    30: "",   // ← ريكورد اليوم 30
+};
+
 // ╔════════════════════════════════════════════════════════════╗
-// ║  الريكوردات - أضف ريكورد لكل يوم                           ║
+// ║  Helper Functions for Google Drive                         ║
 // ╚════════════════════════════════════════════════════════════╝
-const dailyRecords = [
-    { day: 1,  audioFile: "records/record1.mp3" },
-    { day: 2,  audioFile: "records/record2.mp3" }
-    // أضف المزيد هنا:
-    // { day: 3,  audioFile: "records/record3.mp3" },
-];
+
+// رابط التشغيل المباشر
+function getDriveAudioUrl(driveId) {
+    return `https://docs.google.com/uc?export=download&id=${driveId}`;
+}
+
+// رابط الـ Embed (للتشغيل في iframe)
+function getDriveEmbedUrl(driveId) {
+    return `https://drive.google.com/file/d/${driveId}/preview`;
+}
+
+// رابط الفتح في تاب جديد
+function getDriveViewUrl(driveId) {
+    return `https://drive.google.com/file/d/${driveId}/view`;
+}
+
+// تحويل الـ object لـ array
+function getAvailableRecords() {
+    const records = [];
+    for (let day = 1; day <= 30; day++) {
+        const driveId = dailyRecordsDriveIds[day];
+        if (driveId && driveId.trim() !== "") {
+            records.push({
+                day: day,
+                driveId: driveId
+            });
+        }
+    }
+    return records;
+}
 
 // ============= Audio Player State =============
 let isPlaying = false;
 let isDragging = false;
+let useIframePlayer = false; // هنستخدم iframe لو الـ audio مشتغلش
 
 // ============= حساب عدد الأيام من البداية =============
 function getDaysSinceStart() {
@@ -89,6 +160,7 @@ function generateFolders() {
     
     const daysSinceStart = getDaysSinceStart();
     
+    // لو التاريخ لسه ماجاش
     if (daysSinceStart < 0) {
         const waitingMsg = document.createElement('div');
         waitingMsg.className = 'empty-message';
@@ -103,8 +175,10 @@ function generateFolders() {
     }
     
     const availableDays = daysSinceStart + 1;
-    const visibleRecords = dailyRecords.filter(record => record.day <= availableDays);
+    const allRecords = getAvailableRecords();
+    const visibleRecords = allRecords.filter(record => record.day <= availableDays);
     
+    // لو مفيش ريكوردات متاحة
     if (visibleRecords.length === 0) {
         const emptyMsg = document.createElement('div');
         emptyMsg.className = 'empty-message';
@@ -117,6 +191,7 @@ function generateFolders() {
         return;
     }
     
+    // إنشاء الفولدرات
     visibleRecords.forEach((record, index) => {
         const isToday = record.day === availableDays;
         const mood = dailyMoods[record.day] || "💕";
@@ -140,7 +215,8 @@ function generateFolders() {
         container.appendChild(folder);
     });
     
-    if (visibleRecords.length < dailyRecords.length) {
+    // لو في ريكوردات تانية مش ظهرت لسه
+    if (visibleRecords.length < allRecords.length) {
         const hint = document.createElement('div');
         hint.className = 'folders-hint';
         hint.innerHTML = `
@@ -167,16 +243,22 @@ function openRecord(record) {
     const mood = dailyMoods[record.day] || "💝";
     const message = dailyMessages[record.day] || "رسالة اليوم 💕";
     
+    // تحديث المعلومات
     document.getElementById('modal-day').textContent = `${mood} اليوم ${record.day}`;
     document.getElementById('modal-date').textContent = formatArabicDate(record.day);
     document.getElementById('modal-message').textContent = message;
     
+    // تجهيز الصوت من Google Drive
     const audio = document.getElementById('audio-element');
-    audio.src = record.audioFile;
+    const audioUrl = getDriveAudioUrl(record.driveId);
+    
+    audio.src = audioUrl;
     audio.load();
     
+    // Reset state
     isPlaying = false;
     isDragging = false;
+    useIframePlayer = false;
     
     const playIcon = document.getElementById('play-icon');
     if (playIcon) playIcon.textContent = '▶️';
@@ -208,15 +290,21 @@ function openRecord(record) {
     audio.volume = 1;
     updateVolumeIcon(1);
     
+    // زر التحميل - يفتح في Drive
     const downloadBtn = document.getElementById('download-btn');
     if (downloadBtn) {
-        downloadBtn.onclick = () => downloadAudio(record.audioFile, `رسالة-يوم-${record.day}.mp3`);
+        downloadBtn.onclick = () => {
+            window.open(getDriveViewUrl(record.driveId), '_blank');
+        };
     }
+    
+    // حفظ الـ driveId للاستخدام لاحقاً
+    modal.dataset.currentDriveId = record.driveId;
     
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     
-    setupAudioPlayer();
+    setupAudioPlayer(record.driveId);
 }
 
 // ============= Close Modal =============
@@ -227,6 +315,12 @@ function closeModal() {
     if (audio) {
         audio.pause();
         audio.currentTime = 0;
+    }
+    
+    // إزالة أي iframe
+    const iframeContainer = document.getElementById('iframe-player-container');
+    if (iframeContainer) {
+        iframeContainer.remove();
     }
     
     if (modal) {
@@ -242,7 +336,7 @@ function closeModal() {
 }
 
 // ============= Setup Audio Player =============
-function setupAudioPlayer() {
+function setupAudioPlayer(driveId) {
     const audio = document.getElementById('audio-element');
     const progressBar = document.getElementById('progress-bar');
     const slider = document.getElementById('audio-slider');
@@ -253,15 +347,19 @@ function setupAudioPlayer() {
     
     if (!audio) return;
     
+    // لما الـ metadata تتحمل
     audio.onloadedmetadata = () => {
         const duration = audio.duration;
-        if (durationEl) durationEl.textContent = formatTime(duration);
-        if (slider) {
+        if (durationEl && !isNaN(duration)) {
+            durationEl.textContent = formatTime(duration);
+        }
+        if (slider && !isNaN(duration)) {
             slider.max = duration;
             slider.value = 0;
         }
     };
     
+    // تحديث الـ progress
     audio.ontimeupdate = () => {
         if (isDragging) return;
         
@@ -277,6 +375,7 @@ function setupAudioPlayer() {
         if (currentTimeEl) currentTimeEl.textContent = formatTime(current);
     };
     
+    // لما يخلص
     audio.onended = () => {
         isPlaying = false;
         if (playIcon) playIcon.textContent = '▶️';
@@ -290,10 +389,13 @@ function setupAudioPlayer() {
         showToast('✅ انتهى التسجيل', 'success');
     };
     
+    // لو حصل error - نستخدم iframe بدل
     audio.onerror = () => {
-        showToast('❌ مشكلة في تحميل الصوت', 'error');
+        console.log('Audio error, switching to iframe player');
+        showIframePlayer(driveId);
     };
     
+    // Slider controls
     if (slider) {
         const newSlider = slider.cloneNode(true);
         slider.parentNode.replaceChild(newSlider, slider);
@@ -328,6 +430,7 @@ function setupAudioPlayer() {
         });
     }
     
+    // Click on progress bar
     if (progressContainer) {
         progressContainer.onclick = (e) => {
             const rect = progressContainer.getBoundingClientRect();
@@ -342,6 +445,7 @@ function setupAudioPlayer() {
         };
     }
     
+    // Volume slider
     const volumeSlider = document.getElementById('volume-slider');
     if (volumeSlider) {
         volumeSlider.oninput = (e) => {
@@ -351,8 +455,81 @@ function setupAudioPlayer() {
     }
 }
 
+// ============= Show Iframe Player (Fallback) =============
+function showIframePlayer(driveId) {
+    useIframePlayer = true;
+    
+    // إخفاء الـ player العادي
+    const audioPlayer = document.querySelector('.audio-player');
+    if (!audioPlayer) return;
+    
+    // إزالة أي iframe سابق
+    const existingIframe = document.getElementById('iframe-player-container');
+    if (existingIframe) existingIframe.remove();
+    
+    // إنشاء iframe player
+    const iframeContainer = document.createElement('div');
+    iframeContainer.id = 'iframe-player-container';
+    iframeContainer.style.cssText = `
+        width: 100%;
+        margin: 20px 0;
+        text-align: center;
+    `;
+    
+    iframeContainer.innerHTML = `
+        <div style="
+            background: linear-gradient(135deg, rgba(103,58,183,0.3), rgba(63,81,181,0.3));
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        ">
+            <div style="font-size: 3rem; margin-bottom: 15px;">🎵</div>
+            <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">اضغط Play للاستماع</p>
+            <iframe 
+                src="${getDriveEmbedUrl(driveId)}" 
+                width="100%" 
+                height="80" 
+                style="border: none; border-radius: 10px; max-width: 400px;"
+                allow="autoplay">
+            </iframe>
+        </div>
+        <a href="${getDriveViewUrl(driveId)}" 
+           target="_blank" 
+           style="
+               display: inline-block;
+               padding: 12px 25px;
+               background: var(--primary-color, #e91e63);
+               color: white;
+               text-decoration: none;
+               border-radius: 25px;
+               margin-top: 10px;
+           ">
+            🔗 فتح في Google Drive
+        </a>
+    `;
+    
+    // إخفاء الـ waveform والـ controls الأصلية
+    const waveform = audioPlayer.querySelector('.waveform');
+    const mainControls = audioPlayer.querySelector('.player-main-controls');
+    const progressSection = audioPlayer.querySelector('.progress-section-player');
+    const extraControls = audioPlayer.querySelector('.player-extra-controls');
+    
+    if (waveform) waveform.style.display = 'none';
+    if (mainControls) mainControls.style.display = 'none';
+    if (progressSection) progressSection.style.display = 'none';
+    if (extraControls) extraControls.style.display = 'none';
+    
+    // إضافة الـ iframe
+    audioPlayer.insertBefore(iframeContainer, audioPlayer.firstChild);
+}
+
 // ============= Toggle Play/Pause =============
 function togglePlay() {
+    if (useIframePlayer) {
+        showToast('🎵 استخدم الـ Player في الأسفل', 'info');
+        return;
+    }
+    
     const audio = document.getElementById('audio-element');
     const playIcon = document.getElementById('play-icon');
     const waveform = document.querySelector('.waveform');
@@ -370,13 +547,20 @@ function togglePlay() {
             if (waveform) waveform.classList.add('playing');
             isPlaying = true;
         }).catch(err => {
-            showToast('❌ مشكلة في تشغيل الصوت', 'error');
+            console.log('Play error:', err);
+            // لو فشل التشغيل، نستخدم iframe
+            const modal = document.getElementById('audio-modal');
+            if (modal && modal.dataset.currentDriveId) {
+                showIframePlayer(modal.dataset.currentDriveId);
+            }
         });
     }
 }
 
 // ============= Skip Audio =============
 function skipAudio(seconds) {
+    if (useIframePlayer) return;
+    
     const audio = document.getElementById('audio-element');
     if (!audio || isNaN(audio.duration)) return;
     
@@ -385,6 +569,8 @@ function skipAudio(seconds) {
 
 // ============= Change Speed =============
 function changeSpeed() {
+    if (useIframePlayer) return;
+    
     const audio = document.getElementById('audio-element');
     const speedBtn = document.getElementById('speed-btn');
     
@@ -409,6 +595,8 @@ function updateVolumeIcon(value) {
 }
 
 function toggleMute() {
+    if (useIframePlayer) return;
+    
     const audio = document.getElementById('audio-element');
     const volumeSlider = document.getElementById('volume-slider');
     
@@ -433,19 +621,6 @@ function formatTime(seconds) {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
 
-// ============= Download Audio =============
-function downloadAudio(url, filename) {
-    showToast('⬇️ جاري التحميل...', 'info');
-    
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.target = '_blank';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-}
-
 // ============= Toast Notifications =============
 function showToast(message, type = 'info') {
     const existing = document.querySelector('.toast');
@@ -464,16 +639,23 @@ function showToast(message, type = 'info') {
     }, 2500);
 }
 
-// ============= Keyboard (Volume only) =============
+// ============= Keyboard Shortcuts =============
 document.addEventListener('keydown', (e) => {
     const modal = document.getElementById('audio-modal');
     const audio = document.getElementById('audio-element');
     
     if (!modal || modal.classList.contains('hidden')) return;
     
+    // Space for play/pause
+    if (e.key === ' ' && !useIframePlayer) {
+        e.preventDefault();
+        togglePlay();
+    }
+    
+    // Arrow keys for volume
     if (e.key === 'ArrowUp') {
         e.preventDefault();
-        if (audio) {
+        if (audio && !useIframePlayer) {
             audio.volume = Math.min(1, audio.volume + 0.1);
             const volumeSlider = document.getElementById('volume-slider');
             if (volumeSlider) volumeSlider.value = audio.volume;
@@ -483,7 +665,7 @@ document.addEventListener('keydown', (e) => {
     
     if (e.key === 'ArrowDown') {
         e.preventDefault();
-        if (audio) {
+        if (audio && !useIframePlayer) {
             audio.volume = Math.max(0, audio.volume - 0.1);
             const volumeSlider = document.getElementById('volume-slider');
             if (volumeSlider) volumeSlider.value = audio.volume;
@@ -491,6 +673,18 @@ document.addEventListener('keydown', (e) => {
         }
     }
     
+    // Arrow left/right for skip
+    if (e.key === 'ArrowLeft' && !useIframePlayer) {
+        e.preventDefault();
+        skipAudio(-10);
+    }
+    
+    if (e.key === 'ArrowRight' && !useIframePlayer) {
+        e.preventDefault();
+        skipAudio(10);
+    }
+    
+    // Escape to close
     if (e.key === 'Escape') {
         closeModal();
     }
