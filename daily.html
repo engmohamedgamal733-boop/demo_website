@@ -7,19 +7,692 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    CSS Variables                            */
+        /* ═══════════════════════════════════════════════════════════ */
+        :root {
+            --primary-color: #e91e63;
+            --primary-light: #f8bbd9;
+            --primary-dark: #c2185b;
+            --secondary-color: #9c27b0;
+            --gold: #ffd700;
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    Top Banner                               */
+        /* ═══════════════════════════════════════════════════════════ */
+        .top-banner {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            padding: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    Stars Background                         */
+        /* ═══════════════════════════════════════════════════════════ */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, white, transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 90px 40px, white, transparent),
+                radial-gradient(2px 2px at 160px 120px, rgba(255,255,255,0.9), transparent),
+                radial-gradient(1px 1px at 230px 80px, white, transparent);
+            background-size: 250px 250px;
+            animation: twinkle 5s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    Navbar                                   */
+        /* ═══════════════════════════════════════════════════════════ */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: var(--primary-color);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    Main Content                             */
+        /* ═══════════════════════════════════════════════════════════ */
+        .main-content {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-family: 'Aref Ruqaa', serif;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--primary-light), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    Back Button                              */
+        /* ═══════════════════════════════════════════════════════════ */
+        .back-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-color);
+            transform: translateX(-5px);
+        }
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    Folders Container                        */
+        /* ═══════════════════════════════════════════════════════════ */
+        .folders-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    Folder Card                              */
+        /* ═══════════════════════════════════════════════════════════ */
+        .folder {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .folder:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary-light);
+            box-shadow: 0 15px 40px rgba(233, 30, 99, 0.25);
+        }
+
+        .folder.today {
+            border-color: var(--gold);
+            background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(233,30,99,0.15));
+        }
+
+        .folder.today::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,215,0,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .folder-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .folder-mood {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .folder-day {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: var(--primary-light);
+        }
+
+        .folder-status {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .new-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--gold);
+            color: #1a1a2e;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.65rem;
+            font-weight: bold;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    Empty Message                            */
+        /* ═══════════════════════════════════════════════════════════ */
+        .empty-message {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .empty-message h3 {
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .empty-message p {
+            color: var(--text-muted);
+        }
+
+        .countdown {
+            font-size: 1.5rem;
+            color: var(--gold);
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    Folders Hint                             */
+        /* ═══════════════════════════════════════════════════════════ */
+        .folders-hint {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+        }
+
+        .folders-hint p {
+            margin: 5px 0;
+        }
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    Modal                                    */
+        /* ═══════════════════════════════════════════════════════════ */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 25px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: modalIn 0.3s ease;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            background: var(--primary-color);
+            transform: rotate(90deg);
+        }
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    Day Header                               */
+        /* ═══════════════════════════════════════════════════════════ */
+        .day-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-top: 10px;
+        }
+
+        .day-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            background: linear-gradient(45deg, var(--primary-light), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .day-date {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    Message Container                        */
+        /* ═══════════════════════════════════════════════════════════ */
+        .message-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .day-message {
+            text-align: center;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: white;
+        }
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    Audio Player                             */
+        /* ═══════════════════════════════════════════════════════════ */
+        .audio-player {
+            background: linear-gradient(135deg, rgba(103,58,183,0.3), rgba(63,81,181,0.3));
+            padding: 30px;
+            border-radius: 20px;
+            margin: 20px 0;
+        }
+
+        .audio-player-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .audio-player-header .audio-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        .audio-player-header .audio-hint {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+        }
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    Waveform Animation                       */
+        /* ═══════════════════════════════════════════════════════════ */
+        .waveform {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            height: 40px;
+            margin-bottom: 20px;
+        }
+
+        .waveform span {
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(to top, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+            animation: wave 1.2s ease-in-out infinite;
+        }
+
+        .waveform span:nth-child(1) { animation-delay: 0s; }
+        .waveform span:nth-child(2) { animation-delay: 0.1s; }
+        .waveform span:nth-child(3) { animation-delay: 0.2s; }
+        .waveform span:nth-child(4) { animation-delay: 0.3s; }
+        .waveform span:nth-child(5) { animation-delay: 0.4s; }
+        .waveform span:nth-child(6) { animation-delay: 0.5s; }
+        .waveform span:nth-child(7) { animation-delay: 0.4s; }
+        .waveform span:nth-child(8) { animation-delay: 0.3s; }
+        .waveform span:nth-child(9) { animation-delay: 0.2s; }
+        .waveform span:nth-child(10) { animation-delay: 0.1s; }
+
+        @keyframes wave {
+            0%, 100% { height: 10px; }
+            50% { height: 35px; }
+        }
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    Drive Player Container                   */
+        /* ═══════════════════════════════════════════════════════════ */
+        .drive-player-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 15px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .drive-player-container iframe {
+            border-radius: 10px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    Modal Navigation                         */
+        /* ═══════════════════════════════════════════════════════════ */
+        .modal-navigation {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .nav-link-btn {
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .nav-link-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-link-btn.primary {
+            background: var(--primary-color);
+        }
+
+        .nav-link-btn.primary:hover {
+            background: var(--primary-dark);
+        }
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    Fixed Home Button                        */
+        /* ═══════════════════════════════════════════════════════════ */
+        .fixed-back-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 55px;
+            height: 55px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 20px rgba(233, 30, 99, 0.4);
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .fixed-back-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(233, 30, 99, 0.6);
+        }
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    Toast Notifications                      */
+        /* ═══════════════════════════════════════════════════════════ */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #333;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            z-index: 3000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast-success { background: #4caf50; }
+        .toast-error { background: #f44336; }
+        .toast-info { background: #2196f3; }
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    Responsive                               */
+        /* ═══════════════════════════════════════════════════════════ */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(0, 0, 0, 0.95);
+                flex-direction: column;
+                padding: 20px;
+                gap: 10px;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .folders-container {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 15px;
+            }
+
+            .folder {
+                padding: 20px 10px;
+            }
+
+            .folder-icon {
+                font-size: 2.5rem;
+            }
+
+            .modal-content {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .day-number {
+                font-size: 1.5rem;
+            }
+
+            .day-message {
+                font-size: 1.1rem;
+            }
+
+            .audio-player {
+                padding: 20px;
+            }
+
+            .audio-player-header .audio-icon {
+                font-size: 2.5rem;
+            }
+
+            .modal-navigation {
+                flex-direction: column;
+            }
+
+            .fixed-back-btn {
+                bottom: 20px;
+                left: 20px;
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
 </head>
-<body class="daily-page">
+<body>
     <!-- ═══════ الشريط العلوي ═══════ -->
     <div class="top-banner">
         أنا مش هسيب بنوتي ❤️🫂
     </div>
 
+    <!-- ═══════ النجوم ═══════ -->
     <div class="stars"></div>
     
+    <!-- ═══════ شريط التنقل ═══════ -->
     <nav class="navbar">
         <a href="home.html" class="logo">💕 بيتنا</a>
-        <ul class="nav-links">
+        <ul class="nav-links" id="navLinks">
             <li><a href="home.html">الرئيسية</a></li>
             <li><a href="why.html">ليه الموقع ده؟</a></li>
             <li><a href="memories.html">ذكرياتنا</a></li>
@@ -29,23 +702,23 @@
         <button class="menu-toggle" onclick="toggleMenu()">☰</button>
     </nav>
 
+    <!-- ═══════ المحتوى الرئيسي ═══════ -->
     <main class="main-content">
         <h1 class="page-title">🎁 رسائل يومية</h1>
         <p class="page-subtitle">كل يوم بيفتح فولدر جديد فيه مفاجأة ليكي 💕</p>
         
-        <!-- Back Button -->
+        <!-- زر الرجوع -->
         <div class="back-section">
-            <a href="home.html" class="back-btn">
-                ← رجوع للرئيسية
-            </a>
+            <a href="home.html" class="back-btn">← رجوع للرئيسية</a>
         </div>
 
+        <!-- الفولدرات -->
         <div class="folders-container" id="folders-container">
             <!-- Folders will be generated by JavaScript -->
         </div>
     </main>
 
-    <!-- Audio Player Modal -->
+    <!-- ═══════ Audio Player Modal ═══════ -->
     <div id="audio-modal" class="modal hidden">
         <div class="modal-content audio-modal-content">
             <button class="close-modal" onclick="closeModal()" title="إغلاق">✕</button>
@@ -59,84 +732,40 @@
                 <p class="day-message" id="modal-message"></p>
             </div>
             
+            <!-- Audio Player -->
             <div class="audio-player">
-                <audio id="audio-element" preload="metadata"></audio>
+                <div class="audio-player-header">
+                    <span class="audio-icon">🎵</span>
+                    <p class="audio-hint">اضغط Play للاستماع 💕</p>
+                </div>
                 
                 <div class="waveform">
                     <span></span><span></span><span></span><span></span><span></span>
                     <span></span><span></span><span></span><span></span><span></span>
                 </div>
                 
-                <div class="player-main-controls">
-                    <button class="skip-btn" onclick="skipAudio(-10)" title="رجوع 10 ثواني">
-                        ⏪
-                    </button>
-                    <button class="play-btn" onclick="togglePlay()" title="تشغيل/إيقاف">
-                        <span id="play-icon">▶️</span>
-                    </button>
-                    <button class="skip-btn" onclick="skipAudio(10)" title="تقديم 10 ثواني">
-                        ⏩
-                    </button>
+                <div id="drive-player-container" class="drive-player-container">
+                    <!-- iframe will be inserted here -->
                 </div>
-                
-                <div class="progress-section-player">
-                    <span class="time-label" id="current-time">0:00</span>
-                    <div class="progress-wrapper">
-                        <div class="progress-container">
-                            <div class="progress-bar" id="progress-bar"></div>
-                        </div>
-                        <input type="range" 
-                               id="audio-slider" 
-                               class="audio-slider" 
-                               min="0" 
-                               max="100" 
-                               value="0" 
-                               step="0.01">
-                    </div>
-                    <span class="time-label" id="duration">0:00</span>
-                </div>
-                
-                <div class="player-extra-controls">
-                    <div class="volume-control">
-                        <button onclick="toggleMute()" id="volume-icon" title="كتم الصوت">
-                            🔊
-                        </button>
-                        <input type="range" 
-                               id="volume-slider" 
-                               class="volume-slider" 
-                               min="0" 
-                               max="1" 
-                               step="0.05" 
-                               value="1">
-                    </div>
-                    
-                    <button class="speed-btn" id="speed-btn" onclick="changeSpeed()" title="سرعة التشغيل">
-                        1x
-                    </button>
-                </div>
-                
-                <button class="download-btn" id="download-btn" title="تحميل التسجيل">
-                    ⬇️ حملي التسجيل
-                </button>
             </div>
             
             <div class="modal-navigation">
-                <a href="questions.html" class="nav-link-btn">
-                    💭 روحي للأسئلة
-                </a>
-                <a href="home.html" class="nav-link-btn primary">
-                    🏠 الرئيسية
-                </a>
+                <a href="questions.html" class="nav-link-btn">💭 روحي للأسئلة</a>
+                <a href="home.html" class="nav-link-btn primary">🏠 الرئيسية</a>
             </div>
         </div>
     </div>
 
-    <!-- Fixed Home Button -->
-    <a href="home.html" class="fixed-back-btn" title="الرئيسية">
-        🏠
-    </a>
+    <!-- ═══════ Fixed Home Button ═══════ -->
+    <a href="home.html" class="fixed-back-btn" title="الرئيسية">🏠</a>
 
-    <script src="js/main.js"></script>
+    <!-- ═══════ JavaScript ═══════ -->
     <script src="js/daily.js"></script>
+    <script>
+        // Toggle Menu for Mobile
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+    </script>
 </body>
 </html>
