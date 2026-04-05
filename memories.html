@@ -334,7 +334,6 @@
             transform: scale(1.1);
         }
 
-        /* Show overlay always for video and audio */
         .video-placeholder + .click-overlay,
         .audio-placeholder + .click-overlay {
             opacity: 1;
@@ -442,6 +441,200 @@
         .memories-empty h3 {
             margin-bottom: 10px;
             color: white;
+        }
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /*                    LIGHTBOX STYLES                          */
+        /* ═══════════════════════════════════════════════════════════ */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-container {
+            position: relative;
+            max-width: 95vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Close Button */
+        .lightbox-close {
+            position: absolute;
+            top: -50px;
+            left: 10px;
+            background: var(--primary-color);
+            border: none;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .lightbox-close:hover {
+            background: var(--primary-dark);
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        /* External Link Button */
+        .lightbox-external {
+            position: absolute;
+            top: -50px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .lightbox-external:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Media Content */
+        .lightbox-media {
+            max-width: 100%;
+            max-height: 70vh;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-media img {
+            max-width: 90vw;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 15px;
+        }
+
+        .lightbox-media video {
+            max-width: 90vw;
+            max-height: 70vh;
+            border-radius: 15px;
+            background: black;
+        }
+
+        .lightbox-media iframe {
+            width: 90vw;
+            max-width: 900px;
+            height: 60vh;
+            border: none;
+            border-radius: 15px;
+        }
+
+        /* Audio Player */
+        .lightbox-audio-container {
+            background: linear-gradient(135deg, rgba(103,58,183,0.5), rgba(63,81,181,0.5));
+            padding: 60px 80px;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .lightbox-audio-icon {
+            font-size: 5rem;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .lightbox-audio-container audio {
+            width: 100%;
+            min-width: 300px;
+            max-width: 500px;
+        }
+
+        /* Info Section */
+        .lightbox-info {
+            text-align: center;
+            margin-top: 25px;
+            max-width: 600px;
+        }
+
+        .lightbox-title {
+            font-size: 1.5rem;
+            color: var(--primary-light);
+            margin-bottom: 10px;
+            font-family: 'Aref Ruqaa', serif;
+        }
+
+        .lightbox-description {
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        .lightbox-date {
+            display: inline-block;
+            background: var(--primary-color);
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+        /* Loading State */
+        .lightbox-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .lightbox-loading p {
+            margin-top: 20px;
+            color: var(--text-muted);
         }
 
         /* ═══════════════════════════════════════════════════════════ */
@@ -559,6 +752,37 @@
                 width: 50px;
                 height: 50px;
             }
+
+            /* Lightbox Responsive */
+            .lightbox-close {
+                top: -45px;
+                left: 5px;
+                width: 40px;
+                height: 40px;
+            }
+
+            .lightbox-external {
+                top: -45px;
+                right: 5px;
+                padding: 8px 15px;
+                font-size: 0.8rem;
+            }
+
+            .lightbox-audio-container {
+                padding: 40px 30px;
+            }
+
+            .lightbox-audio-icon {
+                font-size: 4rem;
+            }
+
+            .lightbox-title {
+                font-size: 1.2rem;
+            }
+
+            .lightbox-media iframe {
+                height: 50vh;
+            }
         }
     </style>
 </head>
@@ -620,6 +844,22 @@
         <div class="memories-grid" id="memoriesGrid"></div>
     </main>
 
+    <!-- ═══════ LIGHTBOX ═══════ -->
+    <div class="lightbox" id="lightbox" onclick="closeLightboxOnOverlay(event)">
+        <div class="lightbox-container" onclick="event.stopPropagation()">
+            <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+            <a class="lightbox-external" id="lightboxExternal" href="#" target="_blank">
+                🔗 فتح في تاب جديد
+            </a>
+            <div class="lightbox-media" id="lightboxMedia">
+                <!-- Content will be injected here -->
+            </div>
+            <div class="lightbox-info" id="lightboxInfo">
+                <!-- Info will be injected here -->
+            </div>
+        </div>
+    </div>
+
     <!-- زر العودة الثابت -->
     <a href="home.html" class="fixed-back-btn" title="الرئيسية">🏠</a>
 
@@ -633,47 +873,186 @@
         function toggleMenu() {
             document.getElementById('navLinks').classList.toggle('active');
         }
-    
+
         // ═══════════════════════════════════════════════════════════
-        //                    Get Links
+        //                    Get Links & Thumbnails
         // ═══════════════════════════════════════════════════════════
-        function getMemoryLink(memory) {
+        function getExternalLink(memory) {
             if (memory.type === 'image' && memory.driveId) {
                 return `https://drive.google.com/file/d/${memory.driveId}/view`;
             }
             return memory.link || '#';
         }
-    
+
         function getImageThumbnail(driveId) {
             return `https://lh3.googleusercontent.com/d/${driveId}`;
         }
-    
+
+        function getImageFullSize(driveId) {
+            return `https://lh3.googleusercontent.com/d/${driveId}=s1600`;
+        }
+
+        function getDriveEmbedLink(driveId) {
+            return `https://drive.google.com/file/d/${driveId}/preview`;
+        }
+
+        function getArchiveEmbedLink(archiveUrl) {
+            // Extract the item ID from archive.org URL
+            // https://archive.org/details/record1_202604 -> record1_202604
+            const match = archiveUrl.match(/archive\.org\/details\/([^\/\?]+)/);
+            if (match) {
+                return `https://archive.org/embed/${match[1]}`;
+            }
+            return archiveUrl;
+        }
+
         // ═══════════════════════════════════════════════════════════
-        //                    Open Link
+        //                    LIGHTBOX FUNCTIONS
         // ═══════════════════════════════════════════════════════════
-        function openMemoryLink(memory) {
-            const link = getMemoryLink(memory);
-            if (link && link !== '#') {
-                window.open(link, '_blank');
+        function openLightbox(index) {
+            const memory = memoriesData[index];
+            if (!memory || memory.type === 'text') return;
+
+            const lightbox = document.getElementById('lightbox');
+            const mediaContainer = document.getElementById('lightboxMedia');
+            const infoContainer = document.getElementById('lightboxInfo');
+            const externalBtn = document.getElementById('lightboxExternal');
+
+            // Set external link
+            externalBtn.href = getExternalLink(memory);
+
+            // Generate media content based on type
+            let mediaHTML = '';
+            
+            if (memory.type === 'image') {
+                mediaHTML = `
+                    <img src="${getImageFullSize(memory.driveId)}" 
+                         alt="${memory.title}"
+                         onload="this.style.opacity=1"
+                         style="opacity: 0; transition: opacity 0.3s ease;"
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/800x600/1a1a2e/e91e63?text=📷+تعذر+التحميل'">
+                `;
+            } 
+            else if (memory.type === 'video') {
+                // Check if it's a Google Drive link
+                if (memory.driveId) {
+                    mediaHTML = `
+                        <iframe src="${getDriveEmbedLink(memory.driveId)}" 
+                                allow="autoplay; encrypted-media" 
+                                allowfullscreen>
+                        </iframe>
+                    `;
+                } else if (memory.link && memory.link.includes('drive.google.com')) {
+                    // Extract ID from folder or file link
+                    const match = memory.link.match(/\/d\/([^\/]+)|\/folders\/([^\/\?]+)/);
+                    const id = match ? (match[1] || match[2]) : '';
+                    if (id && !memory.link.includes('folders')) {
+                        mediaHTML = `
+                            <iframe src="https://drive.google.com/file/d/${id}/preview" 
+                                    allow="autoplay; encrypted-media" 
+                                    allowfullscreen>
+                            </iframe>
+                        `;
+                    } else {
+                        // It's a folder, show message
+                        mediaHTML = `
+                            <div class="lightbox-audio-container">
+                                <div class="lightbox-audio-icon">📁</div>
+                                <p style="color: var(--text-muted); margin-bottom: 20px;">
+                                    ده فولدر فيه فيديوهات<br>اضغط على الزرار فوق لفتحه
+                                </p>
+                            </div>
+                        `;
+                    }
+                }
+            } 
+            else if (memory.type === 'audio') {
+                if (memory.link && memory.link.includes('archive.org')) {
+                    mediaHTML = `
+                        <div class="lightbox-audio-container">
+                            <div class="lightbox-audio-icon">🎵</div>
+                            <iframe src="${getArchiveEmbedLink(memory.link)}" 
+                                    width="500" 
+                                    height="140" 
+                                    frameborder="0" 
+                                    style="border-radius: 10px; max-width: 100%;">
+                            </iframe>
+                        </div>
+                    `;
+                } else if (memory.driveId) {
+                    mediaHTML = `
+                        <div class="lightbox-audio-container">
+                            <div class="lightbox-audio-icon">🎵</div>
+                            <iframe src="${getDriveEmbedLink(memory.driveId)}" 
+                                    width="500" 
+                                    height="80" 
+                                    style="border-radius: 10px; max-width: 100%;">
+                            </iframe>
+                        </div>
+                    `;
+                }
+            }
+
+            mediaContainer.innerHTML = mediaHTML;
+
+            // Generate info
+            const dateHTML = memory.date && memory.date.trim() !== '' 
+                ? `<span class="lightbox-date">📅 ${memory.date}</span>` 
+                : '';
+
+            infoContainer.innerHTML = `
+                ${dateHTML}
+                <h3 class="lightbox-title">${memory.emoji || ''} ${memory.title}</h3>
+                <p class="lightbox-description">${memory.description}</p>
+            `;
+
+            // Show lightbox
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            const mediaContainer = document.getElementById('lightboxMedia');
+            
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // Clear media after animation
+            setTimeout(() => {
+                mediaContainer.innerHTML = '';
+            }, 300);
+        }
+
+        function closeLightboxOnOverlay(event) {
+            if (event.target.id === 'lightbox') {
+                closeLightbox();
             }
         }
-    
+
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+
         // ═══════════════════════════════════════════════════════════
         //                    Generate Memory Card HTML
         // ═══════════════════════════════════════════════════════════
         function generateMemoryCardHTML(memory, index) {
             let mediaHTML = '';
-    
+
             // 📷 صورة
             if (memory.type === 'image') {
                 mediaHTML = `
-                    <div class="memory-media" onclick="openMemoryLink(memoriesData[${index}])">
+                    <div class="memory-media" onclick="openLightbox(${index})">
                         <img src="${getImageThumbnail(memory.driveId)}" 
                              alt="${memory.title}" 
                              loading="lazy"
                              onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300/1a1a2e/e91e63?text=📷'">
                         <div class="click-overlay">
-                            <span>🔗</span>
+                            <span>🔍</span>
                         </div>
                         <span class="memory-type-badge">📷 صورة</span>
                     </div>
@@ -682,7 +1061,7 @@
             // 🎬 فيديو
             else if (memory.type === 'video') {
                 mediaHTML = `
-                    <div class="memory-media" onclick="openMemoryLink(memoriesData[${index}])">
+                    <div class="memory-media" onclick="openLightbox(${index})">
                         <div class="video-placeholder">
                             <span>🎬</span>
                             <p class="placeholder-text">اضغط للمشاهدة</p>
@@ -697,7 +1076,7 @@
             // 🎵 صوت
             else if (memory.type === 'audio') {
                 mediaHTML = `
-                    <div class="memory-media" onclick="openMemoryLink(memoriesData[${index}])">
+                    <div class="memory-media" onclick="openLightbox(${index})">
                         <div class="audio-placeholder">
                             <span>🎵</span>
                             <p class="placeholder-text">اضغط للاستماع</p>
@@ -717,12 +1096,12 @@
                     </div>
                 `;
             }
-    
+
             // التاريخ (اختياري)
             const dateHTML = memory.date && memory.date.trim() !== '' 
                 ? `<span class="memory-date">📅 ${memory.date}</span>` 
                 : '';
-    
+
             return `
                 ${mediaHTML}
                 <div class="memory-info">
@@ -737,14 +1116,14 @@
                 </div>
             `;
         }
-    
+
         // ═══════════════════════════════════════════════════════════
         //                    Render Memories
         // ═══════════════════════════════════════════════════════════
         function renderMemories(filter = 'all') {
             const grid = document.getElementById('memoriesGrid');
             grid.innerHTML = '';
-    
+
             // لو مفيش بيانات
             if (typeof memoriesData === 'undefined' || memoriesData.length === 0) {
                 grid.innerHTML = `
@@ -756,12 +1135,12 @@
                 `;
                 return;
             }
-    
+
             // فلترة البيانات
             const filteredData = filter === 'all' 
                 ? memoriesData 
                 : memoriesData.filter(m => m.type === filter);
-    
+
             // لو مفيش نتائج للفلتر
             if (filteredData.length === 0) {
                 const typeNames = {
@@ -779,7 +1158,7 @@
                 `;
                 return;
             }
-    
+
             // إنشاء الكروت
             filteredData.forEach((memory, index) => {
                 // نحتاج الـ index الأصلي مش المفلتر
@@ -792,7 +1171,7 @@
                 grid.appendChild(card);
             });
         }
-    
+
         // ═══════════════════════════════════════════════════════════
         //                    Filter Memories
         // ═══════════════════════════════════════════════════════════
@@ -804,7 +1183,7 @@
             // عرض الذكريات المفلترة
             renderMemories(filter);
         }
-    
+
         // ═══════════════════════════════════════════════════════════
         //                    Update Stats
         // ═══════════════════════════════════════════════════════════
@@ -815,13 +1194,13 @@
                 stats.innerHTML = '';
                 return;
             }
-    
+
             const total = memoriesData.length;
             const images = memoriesData.filter(m => m.type === 'image').length;
             const videos = memoriesData.filter(m => m.type === 'video').length;
             const audios = memoriesData.filter(m => m.type === 'audio').length;
             const texts = memoriesData.filter(m => m.type === 'text').length;
-    
+
             stats.innerHTML = `
                 <div class="stat-item">
                     <div class="stat-number">${total}</div>
@@ -849,7 +1228,7 @@
                 </div>` : ''}
             `;
         }
-    
+
         // ═══════════════════════════════════════════════════════════
         //                    Initialize
         // ═══════════════════════════════════════════════════════════
