@@ -76,7 +76,7 @@
                     <button class="skip-btn" onclick="skipAudio(-10)" title="رجوع 10 ثواني">
                         ⏪
                     </button>
-                    <button class="play-btn" onclick="togglePlay()" title="تشغيل/إيقاف (Space)">
+                    <button class="play-btn" onclick="togglePlay()" title="تشغيل/إيقاف">
                         <span id="play-icon">▶️</span>
                     </button>
                     <button class="skip-btn" onclick="skipAudio(10)" title="تقديم 10 ثواني">
@@ -102,14 +102,11 @@
                     <span class="time-label" id="duration">0:00</span>
                 </div>
                 
-                <!-- Time Display (Alternative) -->
-                <div class="time-display" id="time-display">0:00 / 0:00</div>
-                
                 <!-- Extra Controls -->
                 <div class="player-extra-controls">
                     <!-- Volume -->
                     <div class="volume-control">
-                        <button onclick="toggleMute()" id="volume-icon" title="كتم الصوت (M)">
+                        <button onclick="toggleMute()" id="volume-icon" title="كتم الصوت">
                             🔊
                         </button>
                         <input type="range" 
@@ -122,18 +119,9 @@
                     </div>
                     
                     <!-- Speed -->
-                    <button class="speed-btn" id="speed-btn" onclick="changeSpeed()" title="سرعة التشغيل (S)">
+                    <button class="speed-btn" id="speed-btn" onclick="changeSpeed()" title="سرعة التشغيل">
                         1x
                     </button>
-                </div>
-                
-                <!-- Keyboard Hints -->
-                <div class="keyboard-hints">
-                    <span>Space: تشغيل</span>
-                    <span>←→: تقديم/رجوع</span>
-                    <span>↑↓: الصوت</span>
-                    <span>M: كتم</span>
-                    <span>S: السرعة</span>
                 </div>
                 
                 <!-- Download Button -->
