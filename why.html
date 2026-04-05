@@ -4,12 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>💕 ليه الموقع ده؟</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="why-page">
+    <!-- ═══════ الشريط العلوي ═══════ -->
+    <div class="top-banner">
+        أنا مش هسيب بنوتي ❤️🫂
+    </div>
+
+    <div class="stars"></div>
+
     <nav class="navbar">
-        <div class="logo">💕 بيتنا</div>
+        <a href="home.html" class="logo">💕 بيتنا</a>
         <ul class="nav-links">
             <li><a href="home.html">الرئيسية</a></li>
             <li><a href="why.html" class="active">ليه الموقع ده؟</a></li>
@@ -17,29 +26,31 @@
             <li><a href="daily.html">رسائل يومية</a></li>
             <li><a href="questions.html">اسأليني</a></li>
         </ul>
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
     </nav>
 
     <main class="main-content">
+        <!-- Back Button -->
+        <div class="back-section">
+            <a href="home.html" class="back-btn">
+                ← رجوع للرئيسية
+            </a>
+        </div>
+
         <div class="letter-container">
             <div class="letter">
                 <h1>💌 ليه عملت الموقع ده؟</h1>
                 <div class="letter-content">
+                    <!-- ═══════ اكتب رسالتك هنا ═══════ -->
                     <p>يا قمري...</p>
                     <p>
-                        عملت الموقع ده عشان أقدر أقولك كل الكلام اللي 
-                        ساعات بيبقى صعب أقوله بصوتي...
+                        اكتب هنا السبب...
                     </p>
                     <p>
-                        عشان يبقى عندك مكان تيجي فيه لما تحسي إنك 
-                        محتاجة تفتكري إننا بنحب بعض قد إيه 💕
+                        اكتب هنا كلام تاني...
                     </p>
                     <p>
-                        كل حرف هنا متكتب بحب، وكل تسجيل صوت فيه 
-                        جزء من قلبي بيتكلم...
-                    </p>
-                    <p>
-                        أنتِ مش بس حبيبتي، أنتِ كل حاجة حلوة في 
-                        حياتي، وعايز دايماً أفكرك بده 🌙
+                        اكتب هنا كلام تالت...
                     </p>
                     <p class="signature">بحبك من هنا للقمر ورجوع 💕</p>
                     <p class="signature-name">~ حبيبك ~</p>
@@ -47,6 +58,11 @@
             </div>
         </div>
     </main>
+
+    <!-- Fixed Home Button -->
+    <a href="home.html" class="fixed-back-btn" title="الرئيسية">
+        🏠
+    </a>
 
     <script src="js/main.js"></script>
 </body>
