@@ -8,6 +8,312 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ═══════ Memories Specific Styles ═══════ */
+        .memories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .memory-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .memory-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary-light);
+            box-shadow: 0 15px 40px rgba(233, 30, 99, 0.25);
+        }
+
+        .memory-media {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/12;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .memory-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .memory-card:hover .memory-media img {
+            transform: scale(1.05);
+        }
+
+        .memory-media video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .memory-text-only {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            background: linear-gradient(135deg, rgba(233, 30, 99, 0.2), rgba(156, 39, 176, 0.2));
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+        }
+
+        .memory-card:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .play-overlay span {
+            font-size: 4rem;
+            filter: drop-shadow(0 2px 10px rgba(0,0,0,0.5));
+        }
+
+        .memory-info {
+            padding: 20px;
+        }
+
+        .memory-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .memory-emoji {
+            font-size: 2.5rem;
+        }
+
+        .memory-meta {
+            flex: 1;
+        }
+
+        .memory-date {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+
+        .memory-title {
+            font-size: 1.3rem;
+            color: var(--primary-light);
+            font-family: 'Aref Ruqaa', serif;
+        }
+
+        .memory-description {
+            color: var(--text-muted);
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .memory-type-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* ═══════ Lightbox ═══════ */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .lightbox.hidden {
+            display: none;
+        }
+
+        .lightbox-content {
+            max-width: 90vw;
+            max-height: 85vh;
+            position: relative;
+        }
+
+        .lightbox-content img,
+        .lightbox-content video {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 10px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -50px;
+            left: 0;
+            background: var(--primary-color);
+            border: none;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lightbox-close:hover {
+            background: var(--primary-dark);
+            transform: rotate(90deg);
+        }
+
+        .lightbox-info {
+            text-align: center;
+            margin-top: 20px;
+            color: white;
+        }
+
+        .lightbox-info h3 {
+            font-size: 1.5rem;
+            color: var(--primary-light);
+            margin-bottom: 10px;
+        }
+
+        .lightbox-info p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ═══════ Filter Buttons ═══════ */
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .filter-btn.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        /* ═══════ Empty State ═══════ */
+        .memories-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .memories-empty-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        /* ═══════ Stats ═══════ */
+        .memories-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px 25px;
+            border-radius: 15px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ═══════ Responsive ═══════ */
+        @media (max-width: 768px) {
+            .memories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .memory-text-only {
+                font-size: 4rem;
+            }
+
+            .filter-buttons {
+                gap: 8px;
+            }
+
+            .filter-btn {
+                padding: 8px 18px;
+                font-size: 0.85rem;
+            }
+
+            .memories-stats {
+                gap: 15px;
+            }
+
+            .stat-item {
+                padding: 12px 20px;
+            }
+        }
+    </style>
 </head>
 <body class="memories-page">
     <!-- ═══════ الشريط العلوي ═══════ -->
@@ -40,67 +346,44 @@
             </a>
         </div>
 
-        <div class="memories-container">
-            
-            <!-- ═══════ الذكرى 1 ═══════ -->
-            <div class="memory-card">
-                <div class="memory-emoji">💕</div>
-                <div class="memory-date">📅 اكتب التاريخ هنا</div>
-                <h3 class="memory-title">اكتب عنوان الذكرى</h3>
-                <p class="memory-text">
-                    اكتب تفاصيل الذكرى هنا...
-                </p>
-            </div>
-            
-            <!-- ═══════ الذكرى 2 ═══════ -->
-            <div class="memory-card">
-                <div class="memory-emoji">🎉</div>
-                <div class="memory-date">📅 اكتب التاريخ هنا</div>
-                <h3 class="memory-title">اكتب عنوان الذكرى</h3>
-                <p class="memory-text">
-                    اكتب تفاصيل الذكرى هنا...
-                </p>
-            </div>
-            
-            <!-- ═══════ الذكرى 3 ═══════ -->
-            <div class="memory-card">
-                <div class="memory-emoji">😂</div>
-                <div class="memory-date">📅 اكتب التاريخ هنا</div>
-                <h3 class="memory-title">اكتب عنوان الذكرى</h3>
-                <p class="memory-text">
-                    اكتب تفاصيل الذكرى هنا...
-                </p>
-            </div>
-            
-            <!-- ═══════ الذكرى 4 ═══════ -->
-            <div class="memory-card">
-                <div class="memory-emoji">🌙</div>
-                <div class="memory-date">📅 اكتب التاريخ هنا</div>
-                <h3 class="memory-title">اكتب عنوان الذكرى</h3>
-                <p class="memory-text">
-                    اكتب تفاصيل الذكرى هنا...
-                </p>
-            </div>
+        <!-- Stats -->
+        <div class="memories-stats" id="memories-stats">
+            <!-- Will be filled by JavaScript -->
+        </div>
 
-            <!-- ═══════ لإضافة ذكرى جديدة، انسخ الكود ده ═══════ -->
-            <!--
-            <div class="memory-card">
-                <div class="memory-emoji">💕</div>
-                <div class="memory-date">📅 التاريخ</div>
-                <h3 class="memory-title">العنوان</h3>
-                <p class="memory-text">
-                    التفاصيل...
-                </p>
-            </div>
-            -->
-            
-            <div class="add-memory-hint">
-                <p>🌟 هضيف ذكريات أكتر قريب...</p>
-                <p>كل لحظة معاكي تستاهل تتسجل ♥️</p>
-            </div>
-            
+        <!-- Filter Buttons -->
+        <div class="filter-buttons">
+            <button class="filter-btn active" onclick="filterMemories('all')">
+                🌟 الكل
+            </button>
+            <button class="filter-btn" onclick="filterMemories('image')">
+                📷 صور
+            </button>
+            <button class="filter-btn" onclick="filterMemories('video')">
+                🎬 فيديوهات
+            </button>
+            <button class="filter-btn" onclick="filterMemories('text')">
+                📝 كلام
+            </button>
+        </div>
+
+        <!-- Memories Grid -->
+        <div class="memories-grid" id="memories-grid">
+            <!-- Will be filled by JavaScript -->
         </div>
     </main>
+
+    <!-- Lightbox -->
+    <div class="lightbox hidden" id="lightbox" onclick="closeLightbox(event)">
+        <div class="lightbox-content" id="lightbox-content">
+            <button class="lightbox-close" onclick="closeLightbox(event)">✕</button>
+            <div id="lightbox-media"></div>
+            <div class="lightbox-info">
+                <h3 id="lightbox-title"></h3>
+                <p id="lightbox-description"></p>
+            </div>
+        </div>
+    </div>
 
     <!-- Fixed Home Button -->
     <a href="home.html" class="fixed-back-btn" title="الرئيسية">
@@ -108,5 +391,220 @@
     </a>
 
     <script src="js/main.js"></script>
+    <script src="memories/data.js"></script>
+    <script>
+        // ═══════ Generate Memories ═══════
+        function generateMemories(filter = 'all') {
+            const grid = document.getElementById('memories-grid');
+            grid.innerHTML = '';
+
+            // Check if data exists
+            if (typeof memoriesData === 'undefined' || memoriesData.length === 0) {
+                grid.innerHTML = `
+                    <div class="memories-empty" style="grid-column: 1/-1;">
+                        <div class="memories-empty-icon">📭</div>
+                        <h3>لسه مفيش ذكريات</h3>
+                        <p>قريب هضيف ذكرياتنا الحلوة هنا 💕</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Filter memories
+            const filtered = filter === 'all' 
+                ? memoriesData 
+                : memoriesData.filter(m => m.type === filter);
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="memories-empty" style="grid-column: 1/-1;">
+                        <div class="memories-empty-icon">🔍</div>
+                        <h3>مفيش ${getTypeName(filter)} هنا</h3>
+                        <p>جرب فلتر تاني 💕</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Generate cards
+            filtered.forEach((memory, index) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.innerHTML = generateMemoryCard(memory, index);
+                grid.appendChild(card);
+            });
+
+            // Update stats
+            updateStats();
+        }
+
+        // ═══════ Generate Card HTML ═══════
+        function generateMemoryCard(memory, index) {
+            let mediaHTML = '';
+            let typeBadge = '';
+
+            switch(memory.type) {
+                case 'image':
+                    mediaHTML = `
+                        <div class="memory-media" onclick="openLightbox(${index})">
+                            <img src="${memory.file}" alt="${memory.title}" loading="lazy" 
+                                 onerror="this.src='https://via.placeholder.com/400x300?text=📷'">
+                            <div class="play-overlay"><span>🔍</span></div>
+                            <span class="memory-type-badge">📷 صورة</span>
+                        </div>
+                    `;
+                    break;
+
+                case 'video':
+                    mediaHTML = `
+                        <div class="memory-media" onclick="openLightbox(${index})">
+                            <video muted>
+                                <source src="${memory.file}" type="video/mp4">
+                            </video>
+                            <div class="play-overlay"><span>▶️</span></div>
+                            <span class="memory-type-badge">🎬 فيديو</span>
+                        </div>
+                    `;
+                    break;
+
+                case 'text':
+                    mediaHTML = `
+                        <div class="memory-media memory-text-only" onclick="openLightbox(${index})">
+                            ${memory.emoji}
+                            <span class="memory-type-badge">📝 كلام</span>
+                        </div>
+                    `;
+                    break;
+            }
+
+            return `
+                ${mediaHTML}
+                <div class="memory-info">
+                    <div class="memory-header">
+                        <span class="memory-emoji">${memory.emoji}</span>
+                        <div class="memory-meta">
+                            <span class="memory-date">📅 ${memory.date}</span>
+                            <h3 class="memory-title">${memory.title}</h3>
+                        </div>
+                    </div>
+                    <p class="memory-description">${memory.description}</p>
+                </div>
+            `;
+        }
+
+        // ═══════ Filter Memories ═══════
+        function filterMemories(type) {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Generate filtered memories
+            generateMemories(type);
+        }
+
+        // ═══════ Get Type Name ═══════
+        function getTypeName(type) {
+            const names = {
+                'image': 'صور',
+                'video': 'فيديوهات',
+                'text': 'كلام'
+            };
+            return names[type] || type;
+        }
+
+        // ═══════ Update Stats ═══════
+        function updateStats() {
+            const stats = document.getElementById('memories-stats');
+            if (typeof memoriesData === 'undefined') return;
+
+            const total = memoriesData.length;
+            const images = memoriesData.filter(m => m.type === 'image').length;
+            const videos = memoriesData.filter(m => m.type === 'video').length;
+            const texts = memoriesData.filter(m => m.type === 'text').length;
+
+            stats.innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-number">${total}</div>
+                    <div class="stat-label">📚 إجمالي</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${images}</div>
+                    <div class="stat-label">📷 صور</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${videos}</div>
+                    <div class="stat-label">🎬 فيديو</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${texts}</div>
+                    <div class="stat-label">📝 كلام</div>
+                </div>
+            `;
+        }
+
+        // ═══════ Lightbox ═══════
+        function openLightbox(index) {
+            const memory = memoriesData[index];
+            const lightbox = document.getElementById('lightbox');
+            const mediaContainer = document.getElementById('lightbox-media');
+            const title = document.getElementById('lightbox-title');
+            const description = document.getElementById('lightbox-description');
+
+            title.textContent = memory.emoji + ' ' + memory.title;
+            description.textContent = memory.description;
+
+            switch(memory.type) {
+                case 'image':
+                    mediaContainer.innerHTML = `<img src="${memory.file}" alt="${memory.title}">`;
+                    break;
+                case 'video':
+                    mediaContainer.innerHTML = `
+                        <video controls autoplay style="max-width: 100%; max-height: 70vh; border-radius: 10px;">
+                            <source src="${memory.file}" type="video/mp4">
+                        </video>
+                    `;
+                    break;
+                case 'text':
+                    mediaContainer.innerHTML = `
+                        <div style="font-size: 8rem; text-align: center; padding: 50px;">
+                            ${memory.emoji}
+                        </div>
+                    `;
+                    break;
+            }
+
+            lightbox.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox(event) {
+            if (event.target.id === 'lightbox' || event.target.classList.contains('lightbox-close')) {
+                const lightbox = document.getElementById('lightbox');
+                const video = lightbox.querySelector('video');
+                if (video) video.pause();
+                
+                lightbox.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // ═══════ Keyboard ═══════
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const lightbox = document.getElementById('lightbox');
+                if (!lightbox.classList.contains('hidden')) {
+                    closeLightbox({target: {id: 'lightbox'}});
+                }
+            }
+        });
+
+        // ═══════ Initialize ═══════
+        document.addEventListener('DOMContentLoaded', () => {
+            generateMemories();
+        });
+    </script>
 </body>
 </html>
