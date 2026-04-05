@@ -63,8 +63,9 @@ const dailyMoods = {
 // ╚════════════════════════════════════════════════════════════════════╝
 
 const dailyRecordsDriveIds = {
-    1:  "1hPlz-Y7WiQvtNo7wjE3YiGfrCc4WcpIj",   // ← ريكورد اليوم 1
-    2:  "",   // ← ريكورد اليوم 2
+
+    1:  "1m3CBo3zuYI6DDWLXko1PbxfVBMmRvrhN",
+    2:  "1hPlz-Y7WiQvtNo7wjE3YiGfrCc4WcpIj",   // ← ريكورد اليوم 1
     3:  "",   // ← ريكورد اليوم 3
     4:  "",   // ← ريكورد اليوم 4
     5:  "",   // ← ريكورد اليوم 5
