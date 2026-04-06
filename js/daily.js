@@ -63,17 +63,16 @@ const dailyMoods = {
 // ╚════════════════════════════════════════════════════════════════════╝
 
 const dailyRecordsDriveIds = {
-
-    1:  "1m3CBo3zuYI6DDWLXko1PbxfVBMmRvrhN",
-    2:  "1hPlz-Y7WiQvtNo7wjE3YiGfrCc4WcpIj",   // ← ريكورد اليوم 1
-    3:  "",   // ← ريكورد اليوم 3
-    4:  "",   // ← ريكورد اليوم 4
-    5:  "",   // ← ريكورد اليوم 5
-    6:  "",   // ← ريكورد اليوم 6
-    7:  "",   // ← ريكورد اليوم 7
-    8:  "",   // ← ريكورد اليوم 8
-    9:  "",   // ← ريكورد اليوم 9
-    10: "",   // ← ريكورد اليوم 10
+    1:  "1m3CBo3zuYI6DDWLXko1PbxfVBMmRvrhN",   // ← ريكورد اليوم 1
+    2:  "1SynYCt3Z4w326iIZ-jc84Z9VXKyRDO4c",   // ← ريكورد اليوم 2
+    3:  "10JasyCQ7NlBwaKmtOwa3YZuWj7pSepQv",   // ← ريكورد اليوم 3
+    4:  "1GHdd1l4CTp-Yb99m2lA6eD9yn4vQnWnE",   // ← ريكورد اليوم 4
+    5:  "1G0JfOxN1pL03rtzM3KbLJ53AqY7I6z00",   // ← ريكورد اليوم 5
+    6:  "1EiiLmEYkJx-VrnCU-wTbWa8_72Eg_0oL",   // ← ريكورد اليوم 6
+    7:  "1VxX0jXQLtbUu3MoA07kSs0-nWugp-vz6",   // ← ريكورد اليوم 7
+    8:  "1AsCS8lQ1FgiLKMsk_8ypcURcyPASgH8L",   // ← ريكورد اليوم 8
+    9:  "16Nu-jMoKYXI7cwQzx5IrGiX4tAD7fW23",   // ← ريكورد اليوم 9
+    10: "1C1gJPOk7ku8MMp6nNlvh6Uid3aFs0SQB",   // ← ريكورد اليوم 10
     11: "",   // ← ريكورد اليوم 11
     12: "",   // ← ريكورد اليوم 12
     13: "",   // ← ريكورد اليوم 13
