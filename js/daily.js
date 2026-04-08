@@ -73,13 +73,13 @@ const dailyRecordsDriveIds = {
     8:  "1AsCS8lQ1FgiLKMsk_8ypcURcyPASgH8L",   // ← ريكورد اليوم 8
     9:  "16Nu-jMoKYXI7cwQzx5IrGiX4tAD7fW23",   // ← ريكورد اليوم 9
     10: "1C1gJPOk7ku8MMp6nNlvh6Uid3aFs0SQB",   // ← ريكورد اليوم 10
-    11: "",   // ← ريكورد اليوم 11
-    12: "",   // ← ريكورد اليوم 12
-    13: "",   // ← ريكورد اليوم 13
-    14: "",   // ← ريكورد اليوم 14
-    15: "",   // ← ريكورد اليوم 15
-    16: "",   // ← ريكورد اليوم 16
-    17: "",   // ← ريكورد اليوم 17
+    11: "1kLLy6lLF0HaO3Bj_YkLK8-Gw-N-q4gfW",   // ← ريكورد اليوم 11 ✅ جديد
+    12: "1pCz1zKgDZ4xw777OI-62HardVX70bqdc",   // ← ريكورد اليوم 12 ✅ جديد
+    13: "1m3Y_bTcGipWbbRwRJKm5XYvQ_Xfi43GP",   // ← ريكورد اليوم 13 ✅ جديد
+    14: "1AmPC394afG6HDXPrFpworGleiJcJ2kkQ",   // ← ريكورد اليوم 14 ✅ جديد
+    15: "1KXI48XC25Fj9oenbccw9NPNcUaEp64OJ",   // ← ريكورد اليوم 15 ✅ جديد
+    16: "1nm4qlm-CfnG9uuU6V92U5q8XdOZXJwVz",   // ← ريكورد اليوم 16 ✅ جديد
+    17: "1WedXoUwt3QD0CS-Ed6Y7oEGZZI-UNE3I",   // ← ريكورد اليوم 17 ✅ جديد
     18: "",   // ← ريكورد اليوم 18
     19: "",   // ← ريكورد اليوم 19
     20: "",   // ← ريكورد اليوم 20
